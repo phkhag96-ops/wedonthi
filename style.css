@@ -460,3 +460,18 @@ body {
         padding: 20px !important;
     }
 }
+/* --- ÉP CÁC Ô CHỌN MÔN HỌC XẾP DỌC TRÊN ĐIỆN THOẠI --- */
+@media screen and (max-width: 768px) {
+    /* Tìm đến thẻ chứa các ô môn học và chuyển sang dạng cột dọc */
+    .danh-sach-mon, .container-mon, div[style*="display: flex"], body {
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+    /* Thu nhỏ chiều rộng các thẻ môn học (màu hồng) để không bị tràn màn hình */
+    .the-mon, .hop-mon, div[class*="mon"], div[style*="background: pink"], div[style*="background-color: pink"] {
+        width: 85% !important;
+        max-width: 300px !important;
+        margin: 10px auto !important;
+    }
+}
