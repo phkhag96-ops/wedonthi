@@ -437,3 +437,24 @@ body {
     text-align: center;
     margin-top: 30px;
 }
+/* Tối ưu giao diện cho điện thoại màn hình nhỏ */
+@media screen and (max-width: 768px) {
+    /* Cho thanh menu đỏ tự động xuống dòng hoặc thu nhỏ các nút lại */
+    header, .menu-bar, .nhom-nut-menu {
+        flex-wrap: wrap;
+        padding: 5px;
+    }
+    
+    /* Thu nhỏ các nút "Thêm Đề Word", "Pvk", "Đăng xuất" cho vừa màn hình điện thoại */
+    .menu-bar button, .nhom-nut-menu button {
+        font-size: 12px;
+        padding: 6px 10px;
+        margin: 2px;
+    }
+
+    /* Đảm bảo các khung chọn môn học xếp dọc hoặc thu nhỏ lại để không bị tràn ngang */
+    .hop-dang-nhap {
+        width: 90% !important;
+        margin: 20px auto;
+    }
+}
