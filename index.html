@@ -3,88 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Luyện Đề - PVK</title>
+    <title>Đăng Nhập - Hệ Thống Luyện Đề</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
-<div class="snowflake">❄</div>
+    <div class="snowflake">❤️</div>
+<div class="snowflake">🐑</div>
+<div class="snowflake">🐑</div>
+<div class="snowflake">❤️</div>
+<div class="snowflake">🌹</div>
+<div class="snowflake">🐑</div>
+<div class="snowflake">🌹</div>
+<div class="snowflake">❤️</div>
+<div class="snowflake">🌹</div>
+<div class="snowflake">🐑</div>
+<div class="snowflake">🌹</div>
+<div class="snowflake">🌹</div>
+<div class="snowflake">🐑</div>
+<div class="snowflake">🐑</div>
+<div class="snowflake">🌹</div>
 
-    <!-- Thanh Menu Trên Cùng (Navbar) -->
-    <div class="thanh-menu">
-        <div class="logo">PVK - Sảnh</div>
-        <div class="nhom-nut">
-            <button class="nut-them-de">➕ Thêm Đề Word</button>
-            <div class="user-info">👤 Pvk</div>
-            <button class="nut-dang-xuat">Đăng xuất</button>
+    <!-- Khung hộp màu trắng ở giữa màn hình -->
+    <div class="hop-dang-nhap">
+        
+        <h2 class="tieu-de-form">Hệ Thống Luyện Đề</h2>
+
+        <!-- Nhóm 2 nút chuyển đổi Đăng nhập / Đăng ký -->
+        <div class="nhom-tab">
+            <button class="tab-btn active">Đăng Nhập</button>
+            <button class="tab-btn">Đăng Ký Mới</button>
         </div>
-    </div>
 
-    <!-- Nội dung chính phía dưới -->
-    <div class="noi-dung-chinh">
-        <h1 class="tieu-de">Chọn môn học</h1>
-
-        <div class="danh-sach-mon">
-            <!-- Ô Môn Toán -->
-             <a href="thithu.html" style="text-decoration: none; color: inherit;"></a>
-            <div class="the-mon-hoc">
-                
-                <div class="icon">📐</div>
-                <h2 class="ten-mon">Toán</h2>
-                <p class="so-de">0 đề thi</p>
-            </div>
-            </a>
-
-            <!-- Ô Môn Vật Lý -->
-             <a href="thithu.html" style="text-decoration: none; color: inherit;"></a>
-            <div class="the-mon-hoc">
-                <div class="icon">⚡</div>
-                <h2 class="ten-mon">Vật Lý</h2>
-                <p class="so-de">0 đề thi</p>
-            </div>
-            </a>
-            <!-- Ô Môn Tin Học -->
-             <a href="thithu.html" style="text-decoration: none; color: inherit;"></a>
-            <div class="the-mon-hoc">
-                <div class="icon">💻</div>
-                <h2 class="ten-mon">Tin Học</h2>
-                <p class="so-de">0 đề thi</p>
-            </div>
+        <!-- Các ô nhập thông tin -->
+        <div class="form-group">
+            <label>Tên đăng nhập</label>
+            <input type="text" placeholder="Nhập tài khoản...">
         </div>
+
+        <div class="form-group">
+            <label>Mật khẩu</label>
+            <input type="password" placeholder="abcd...">
+        </div>
+
+        <!-- Ô nhập mã đăng ký độc quyền từ Admin -->
+        <div class="form-group">
+            <label>Mã kích hoạt (Admin cấp)</label>
+            <input type="text" placeholder="Ví dụ: PVK-0303A...">
+        </div>
+
+        <!-- Nút bấm chính -->
+        <button class="nut-xac-nhan">Đăng Nhập</button>
+
+        <!-- Dòng chữ báo lỗi màu đỏ giống ảnh mẫu -->
+        <p class="bao-loi">Nhập rồi vào</p>
+
     </div>
 
 </body>
