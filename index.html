@@ -5,23 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng Nhập - Hệ Thống Luyện Đề</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Thêm chút CSS hiển thị lỗi cho sinh động */
+        .bao-loi {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     <div class="snowflake">❤️</div>
-<div class="snowflake">🐑</div>
-<div class="snowflake">🐑</div>
-<div class="snowflake">❤️</div>
-<div class="snowflake">🌹</div>
-<div class="snowflake">🐑</div>
-<div class="snowflake">🌹</div>
-<div class="snowflake">❤️</div>
-<div class="snowflake">🌹</div>
-<div class="snowflake">🐑</div>
-<div class="snowflake">🌹</div>
-<div class="snowflake">🌹</div>
-<div class="snowflake">🐑</div>
-<div class="snowflake">🐑</div>
-<div class="snowflake">🌹</div>
+    <div class="snowflake">🐑</div>
+    <div class="snowflake">🐑</div>
+    <div class="snowflake">❤️</div>
+    <div class="snowflake">🌹</div>
+    <div class="snowflake">🐑</div>
+    <div class="snowflake">🌹</div>
+    <div class="snowflake">❤️</div>
+    <div class="snowflake">🌹</div>
+    <div class="snowflake">🐑</div>
+    <div class="snowflake">🌹</div>
+    <div class="snowflake">🌹</div>
+    <div class="snowflake">🐑</div>
+    <div class="snowflake">🐑</div>
+    <div class="snowflake">🌹</div>
 
     <!-- Khung hộp màu trắng ở giữa màn hình -->
     <div class="hop-dang-nhap">
@@ -30,34 +39,71 @@
 
         <!-- Nhóm 2 nút chuyển đổi Đăng nhập / Đăng ký -->
         <div class="nhom-tab">
-            <button class="tab-btn active">Đăng Nhập</button>
-            <button class="tab-btn">Đăng Ký Mới</button>
+            <button class="tab-btn active" type="button">Đăng Nhập</button>
+            <button class="tab-btn" type="button">Đăng Ký Mới</button>
         </div>
 
         <!-- Các ô nhập thông tin -->
         <div class="form-group">
             <label>Tên đăng nhập</label>
-            <input type="text" placeholder="Nhập tài khoản...">
+            <input type="text" id="username" placeholder="Nhập tài khoản...">
         </div>
 
         <div class="form-group">
             <label>Mật khẩu</label>
-            <input type="password" placeholder="abcd...">
+            <input type="password" id="password" placeholder="abcd...">
         </div>
 
         <!-- Ô nhập mã đăng ký độc quyền từ Admin -->
         <div class="form-group">
             <label>Mã kích hoạt (Admin cấp)</label>
-            <input type="text" placeholder="Ví dụ: PVK-0303A...">
+            <input type="text" id="admin-code" placeholder="Ví dụ: PVK-0303A...">
         </div>
 
         <!-- Nút bấm chính -->
-        <button class="nut-xac-nhan">Đăng Nhập</button>
+        <button class="nut-xac-nhan" id="login-btn" type="button">Đăng Nhập</button>
 
-        <!-- Dòng chữ báo lỗi màu đỏ giống ảnh mẫu -->
-        <p class="bao-loi">Nhập rồi vào</p>
+        <!-- Dòng chữ báo lỗi màu đỏ -->
+        <p class="bao-loi" id="error-msg"></p>
 
     </div>
 
+    <!-- Đoạn mã JavaScript xử lý kiểm tra mã -->
+    <script>
+        // Danh sách các mã kích hoạt do Admin cấp (Bạn có thể thêm các mã khác vào đây tùy ý)
+        const validAdminCodes = ["PVK-0303A", "ADMIN2026", "VIP999"];
+
+        document.getElementById("login-btn").addEventListener("click", function() {
+            const user = document.getElementById("username").value.trim();
+            const pass = document.getElementById("password").value.trim();
+            const code = document.getElementById("admin-code").value.trim();
+            const errorMsg = document.getElementById("error-msg");
+
+            // Kiểm tra xem đã nhập đủ thông tin chưa
+            if (user === "" || pass === "") {
+                errorMsg.textContent = "Vui lòng nhập đầy đủ tài khoản và mật khẩu!";
+                return;
+            }
+
+            if (code === "") {
+                errorMsg.textContent = "Vui lòng nhập mã kích hoạt do Admin cấp!";
+                return;
+            }
+
+            // Kiểm tra xem mã admin có khớp không
+            if (validAdminCodes.includes(code)) {
+                errorMsg.style.color = "green";
+                errorMsg.textContent = "Đăng nhập thành công! Đang chuyển hướng...";
+                
+                // Chuyển sang trang chọn môn học (home.html) sau 1 giây
+                setTimeout(function() {
+                    window.location.href = "home.html";
+                }, 1000);
+            } else {
+                errorMsg.style.color = "red";
+                errorMsg.textContent = "Mã kích hoạt không đúng hoặc chưa được cấp!";
+            }
+        });
+    </script>
 </body>
 </html>
