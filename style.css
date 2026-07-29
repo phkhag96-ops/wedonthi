@@ -1,0 +1,439 @@
+/* Định dạng cơ bản cho toàn trang */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #22b94f;
+    margin: 0;
+    padding: 0;
+}
+
+/* 1. Trang trí Thanh Menu Màu Hồng */
+.thanh-menu {
+    background-color: #e72e2e; /* Màu hồng đậm giống ảnh mẫu */
+    color: rgb(242, 248, 244);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 25px;
+}
+
+.logo {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.nhom-nut {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Nút Thêm Đề Word Màu Xanh Lá */
+.nut-them-de {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Nút Đăng Xuất Màu Đỏ Đậm */
+.nut-dang-xuat {
+    background-color: #c0392b;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* 2. Phần nội dung các môn học */
+.noi-dung-chinh {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.tieu-de {
+    color: #333;
+    font-size: 28px;
+    margin-bottom: 40px;
+}
+
+/* Xếp các ô môn học nằm NGANG hàng nhau */
+.danh-sach-mon {
+    display: flex;
+    flex-direction: row; /* Hàng ngang */
+    justify-content: center;
+    gap: 30px;
+    width: 100%;
+    max-width: 1000px;
+}
+
+/* Định dạng từng ô vuông môn học */
+.the-mon-hoc {
+    background-color: rgb(255, 142, 221);
+    border: 1px solid #fd7ccc;
+    border-radius: 8px;
+    padding: 40px;
+    width: 160px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.the-mon-hoc:hover {
+    transform: translateY(-3px);
+}
+
+.icon {
+    font-size: 50px;
+    margin-bottom: 15px;
+}
+
+.ten-mon {
+    font-size: 20px;
+    color: #333;
+    margin: 0 0 5px 0;
+}
+
+.so-de {
+    color: #20492e;
+    font-size: 14px;
+    margin: 0;
+}
+/* --- PHẦN TRANG TRÍ FORM ĐĂNG NHẬP --- */
+.hop-dang-nhap {
+    background-color: white;
+    padding: 40px 30px;
+    border-radius: 20px; /* Bo góc tròn sâu giống ảnh mẫu */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    margin: 80px auto;
+    text-align: center;
+}
+
+.tieu-de-form {
+    color: #1a252f;
+    font-size: 26px;
+    margin-bottom: 25px;
+}
+
+.nhom-tab {
+    display: flex;
+    background-color: #f077e0;
+    padding: 5px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+.tab-btn {
+    flex: 1;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    background: none;
+    cursor: pointer;
+    font-weight: bold;
+    color: #4e83d3;
+}
+
+/* Nút Đăng nhập đang được chọn màu xanh dương */
+.tab-btn.active {
+    background-color: #2563eb;
+    color: white;
+}
+
+.form-group {
+    text-align: left;
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #2d3748;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+.nut-xac-nhan {
+    width: 100%;
+    background-color: #2563eb; /* Màu xanh chuẩn ảnh mẫu */
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.bao-loi {
+    color: #161ae2; /* Màu đỏ báo lỗi */
+    font-weight: bold;
+    margin-top: 15px;
+    font-size: 15px;
+}
+/* --- 4. TRANG LÀM BÀI THI (THI) --- */
+.thanh-trang-thai { 
+    width: 100%; 
+    max-width: 1200px; 
+    margin: 10px auto; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    background-color: #1e293b; 
+    color: white; 
+    padding: 15px 20px; 
+    border-radius: 8px; 
+    box-sizing: border-box; 
+}
+
+.dong-ho { 
+    font-size: 18px; 
+    font-weight: bold; 
+    color: #f59e0b; /* Màu vàng nổi bật của đồng hồ */
+}
+
+.ket-qua-cham { 
+    font-size: 18px; 
+    font-weight: bold; 
+    background-color: #10b981; /* Màu xanh lá cây báo kết quả */
+    padding: 8px 15px; 
+    border-radius: 6px; 
+}
+
+.giao-dien-thi { 
+    display: flex; 
+    max-width: 1200px; 
+    margin: 20px auto; 
+    gap: 20px; 
+    padding: 10px; 
+}
+
+/* Cột danh sách số câu hỏi bên trái */
+.cot-cau-hoi { 
+    width: 250px; 
+    background-color: white; 
+    padding: 20px; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+}
+
+.cac-o-so { 
+    display: grid; 
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 10px; 
+    margin-top: 15px; 
+}
+
+.o-so { 
+    padding: 10px; 
+    border: 1px solid #cbd5e1; 
+    background-color: white; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    font-weight: bold; 
+}
+
+.o-so.active { 
+    border: 2px solid #2563eb; /* Ô câu hỏi đang làm sẽ có viền xanh */
+}
+
+/* Cột nội dung câu hỏi bên phải */
+.cot-noi-dung { 
+    flex: 1; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 20px; 
+}
+
+.khung-cau-hoi { 
+    background-color: white; 
+    padding: 25px; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+}
+
+.dang-cau { 
+    color: #805ad5; /* Chữ màu tím hiển thị dạng câu hỏi */
+    font-weight: bold; 
+    font-size: 14px; 
+    margin-top: 0; 
+}
+
+.de-bai { 
+    font-size: 18px; 
+    line-height: 1.6; 
+}
+
+.cac-phuong-an label { 
+    display: block; 
+    padding: 10px; 
+    background-color: #f8fafc; 
+    margin-top: 8px; 
+    border-radius: 6px; 
+    cursor: pointer; 
+}
+
+/* Ô nhập chữ cho câu hỏi trả lời ngắn */
+.o-tra-loi-ngan input { 
+    width: 100%; 
+    padding: 12px; 
+    border: 1px solid #cbd5e1; 
+    border-radius: 6px; 
+    font-size: 16px; 
+}
+
+.nut-nop-bai { 
+    background-color: #e715c4; /* Nút nộp bài màu hồng */
+    color: white; 
+    border: none; 
+    padding: 15px; 
+    font-size: 18px; 
+    font-weight: bold; 
+    border-radius: 8px; 
+    cursor: pointer; 
+}
+/* Giữ cố định bảng số câu hỏi bên trái khi cuộn chuột làm bài */
+.cot-cau-hoi {
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+}
+/* Định hình hạt tuyết */
+.snowflake {
+  color: #fff;
+  font-size: 1.5em;
+  font-family: Arial, sans-serif;
+  text-shadow: 0 0 5px rgba(0,0,0,0.1);
+  position: fixed;
+  top: -10%;
+  z-index: 9999;
+  user-select: none;
+  cursor: default;
+  animation-name: snowflakes-fall, snowflakes-shake;
+  animation-duration: 10s, 3s;
+  animation-timing-function: linear, ease-in-out;
+  animation-iteration-count: infinite, infinite;
+  animation-play-state: running, running;
+}
+
+/* Chia thời gian rơi khác nhau cho từng hạt tự nhiên hơn */
+.snowflake:nth-of-type(1) { left: 10%; animation-delay: 0s, 0s; }
+.snowflake:nth-of-type(2) { left: 30%; animation-delay: 1s, 1s; }
+.snowflake:nth-of-type(3) { left: 50%; animation-delay: 0s, 2s; }
+.snowflake:nth-of-type(4) { left: 70%; animation-delay: 2s, 1.5s; }
+.snowflake:nth-of-type(5) { left: 85%; animation-delay: 2s, 3s; }
+.snowflake:nth-of-type(6) { left: 95%; animation-delay: 3s, 2s; }
+.snowflake:nth-of-type(7) { left: 50%; animation-delay: 3s, 2.5s; }
+.snowflake:nth-of-type(8) { left: 58%; animation-delay: 6s, 0.2s; }
+.snowflake:nth-of-type(9) { left: 65%; animation-delay: 1.8s, 1.2s; }
+.snowflake:nth-of-type(10) { left: 73%; animation-delay: 4.5s, 3s; }
+.snowflake:nth-of-type(11) { left: 80%; animation-delay: 0.2s, 0.8s; }
+.snowflake:nth-of-type(12) { left: 87%; animation-delay: 2.8s, 1.7s; }
+.snowflake:nth-of-type(13) { left: 93%; animation-delay: 5s, 2.2s; }
+.snowflake:nth-of-type(14) { left: 15%; animation-delay: 3.5s, 0.5s; }
+.snowflake:nth-of-type(15) { left: 60%; animation-delay: 0.5s, 2.7s; }
+.snowflake:nth-of-type(7) { left: 50%; animation-delay: 3s, 2.5s; }
+.snowflake:nth-of-type(8) { left: 58%; animation-delay: 6s, 0.2s; }
+.snowflake:nth-of-type(9) { left: 65%; animation-delay: 1.8s, 1.2s; }
+.snowflake:nth-of-type(10) { left: 73%; animation-delay: 4.5s, 3s; }
+.snowflake:nth-of-type(11) { left: 80%; animation-delay: 0.2s, 0.8s; }
+.snowflake:nth-of-type(12) { left: 87%; animation-delay: 2.8s, 1.7s; }
+.snowflake:nth-of-type(13) { left: 93%; animation-delay: 5s, 2.2s; }
+.snowflake:nth-of-type(14) { left: 15%; animation-delay: 3.5s, 0.5s; }
+.snowflake:nth-of-type(15) { left: 60%; animation-delay: 0.5s, 2.7s; }
+
+/* Hiệu ứng rơi từ trên xuống */
+@keyframes snowflakes-fall {
+  0% { top: -10%; }
+  100% { top: 100%; }
+}
+
+/* Hiệu ứng lắc lư qua lại khi rơi */
+@keyframes snowflakes-shake {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(50px); }
+}
+/* Khung bọc toàn bộ đề thi */
+.exam-container {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Từng khối câu hỏi */
+.question-block {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #eee;
+}
+
+.question-title {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+/* Nhóm đáp án */
+.options-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Để đáp án Đúng/Sai nằm ngang cạnh nhau */
+.options-group.row-layout {
+    flex-direction: row;
+    gap: 30px;
+}
+
+/* Từng dòng chọn đáp án */
+.option-item, .option-item-tf {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.option-item:hover {
+    background-color: #f5f5f5;
+}
+
+/* Ô nhập câu trả lời ngắn */
+.short-input {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* Căn giữa khu vực nút nộp bài */
+.submit-zone {
+    text-align: center;
+    margin-top: 30px;
+}
