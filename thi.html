@@ -61,3 +61,10 @@
     </div>
 </body>
 </html>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const maDe = urlParams.get('de');
+    if (maDe) {
+        document.title = "Phòng Thi - Đề Số " + maDe;
+    }
+</script>

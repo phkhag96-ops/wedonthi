@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh Sách Đề Thi - PVK</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Thanh menu phía trên -->
+    <header style="background: red; padding: 10px; display: flex; justify-content: space-between; align-items: center; color: white;">
+        <h3 id="tieu-de-mon" style="margin: 0;">Danh Sách Đề Thi</h3>
+        <div>
+            <button onclick="location.href='home.html'">Trang Chủ</button>
+            <button onclick="location.href='index.html'">Đăng xuất</button>
+        </div>
+    </header>
+
+    <!-- Khung chứa danh sách các đề -->
+    <div style="display: flex; justify-content: center; align-items: center; min-height: 80vh; padding: 20px;">
+        <div class="hop-dang-nhap" style="background: white; width: 100%; max-width: 500px; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
+            
+            <h2 style="text-align: center; margin-bottom: 25px; color: #2c3e50;">Chọn Đề Kiểm Tra</h2>
+            
+            <!-- DANH SÁCH CÁC ĐỀ THI (Sau này bạn muốn tự thêm đề thì cứ copy dòng thẻ <a> dưới dán thêm vào) -->
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <a href="thi.html?de=1" class="nut-xac-nhan" style="background: #3498db; color: white; padding: 12px; text-align: center; text-decoration: none; border-radius: 5px; font-weight: bold; display: block;">Đề Số 1: Kiểm Tra 15 Phút</a>
+                <a href="thi.html?de=2" class="nut-xac-nhan" style="background: #3498db; color: white; padding: 12px; text-align: center; text-decoration: none; border-radius: 5px; font-weight: bold; display: block;">Đề Số 2: Kiểm Tra 1 Tiết (Giữa Kỳ)</a>
+                <a href="thi.html?de=3" class="nut-xac-nhan" style="background: #3498db; color: white; padding: 12px; text-align: center; text-decoration: none; border-radius: 5px; font-weight: bold; display: block;">Đề Số 3: Thi Cuối Học Kỳ</a>
+                
+                <!-- BẠN MUỐN THÊM ĐỀ MỚI (ĐỀ 4, ĐỀ 5...) THÌ CỨ COPY DÒNG DƯỚI ĐÂY DÁN THÊM VÀO: -->
+                <!-- <a href="thi.html?de=4" class="nut-xac-nhan" style="background: #3498db; color: white; padding: 12px; text-align: center; text-decoration: none; border-radius: 5px; font-weight: bold; display: block;">Đề Số 4: Tên đề của bạn ở đây</a> -->
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Script tự động đổi tên tiêu đề theo môn bạn chọn ở trang chủ -->
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const mon = urlParams.get('mon');
+        const tieuDeMon = document.getElementById('tieu-de-mon');
+        if (mon === 'toan') tieuDeMon.innerText = 'Danh Sách Đề Thi - Môn Toán';
+        else if (mon === 'ly') tieuDeMon.innerText = 'Danh Sách Đề Thi - Môn Vật Lý';
+        else if (mon === 'tin') tieuDeMon.innerText = 'Danh Sách Đề Thi - Môn Tin Học';
+    </script>
+</body>
+</html>
