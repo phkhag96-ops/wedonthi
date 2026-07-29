@@ -3,15 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng Nhập - Hệ Thống Luyện Đề</title>
+    <title>Hệ Thống Luyện Đề</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Thêm chút CSS hiển thị lỗi cho sinh động */
         .bao-loi {
             color: red;
             font-size: 14px;
             margin-top: 10px;
             text-align: center;
+        }
+        /* Ẩn hiện ô mã kích hoạt theo tab */
+        .hidden {
+            display: none;
         }
     </style>
 </head>
@@ -35,12 +38,12 @@
     <!-- Khung hộp màu trắng ở giữa màn hình -->
     <div class="hop-dang-nhap">
         
-        <h2 class="tieu-de-form">Hệ Thống Luyện Đề</h2>
+        <h2 class="tieu-de-form" id="form-title">Đăng Nhập Hệ Thống</h2>
 
         <!-- Nhóm 2 nút chuyển đổi Đăng nhập / Đăng ký -->
         <div class="nhom-tab">
-            <button class="tab-btn active" type="button">Đăng Nhập</button>
-            <button class="tab-btn" type="button">Đăng Ký Mới</button>
+            <button class="tab-btn active" id="tab-login" type="button">Đăng Nhập</button>
+            <button class="tab-btn" id="tab-register" type="button">Đăng Ký Mới</button>
         </div>
 
         <!-- Các ô nhập thông tin -->
@@ -54,54 +57,93 @@
             <input type="password" id="password" placeholder="abcd...">
         </div>
 
-        <!-- Ô nhập mã đăng ký độc quyền từ Admin -->
-        <div class="form-group">
+        <!-- Ô nhập mã đăng ký độc quyền từ Admin (Mặc định ẩn ở tab Đăng Nhập) -->
+        <div class="form-group hidden" id="group-admin-code">
             <label>Mã kích hoạt (Admin cấp)</label>
             <input type="text" id="admin-code" placeholder="Ví dụ: PVK-0303A...">
         </div>
 
         <!-- Nút bấm chính -->
-        <button class="nut-xac-nhan" id="login-btn" type="button">Đăng Nhập</button>
+        <button class="nut-xac-nhan" id="submit-btn" type="button">Đăng Nhập</button>
 
-        <!-- Dòng chữ báo lỗi màu đỏ -->
+        <!-- Dòng chữ báo lỗi/thông báo -->
         <p class="bao-loi" id="error-msg"></p>
 
     </div>
 
-    <!-- Đoạn mã JavaScript xử lý kiểm tra mã -->
+    <!-- Đoạn mã JavaScript xử lý chuyển tab và xác thực -->
     <script>
-        // Danh sách các mã kích hoạt do Admin cấp (Bạn có thể thêm các mã khác vào đây tùy ý)
+        const tabLogin = document.getElementById("tab-login");
+        const tabRegister = document.getElementById("tab-register");
+        const groupAdminCode = document.getElementById("group-admin-code");
+        const formTitle = document.getElementById("form-title");
+        const submitBtn = document.getElementById("submit-btn");
+        const errorMsg = document.getElementById("error-msg");
+
+        let isLoginMode = true; // Biến kiểm tra đang ở chế độ Đăng nhập hay Đăng ký
+
+        // Khi bấm nút Đăng Nhập trên thanh tab
+        tabLogin.addEventListener("click", function() {
+            isLoginMode = true;
+            tabLogin.classList.add("active");
+            tabRegister.classList.remove("active");
+            groupAdminCode.classList.add("hidden"); // Ẩn ô mã kích hoạt
+            formTitle.textContent = "Đăng Nhập Hệ Thống";
+            submitBtn.textContent = "Đăng Nhập";
+            errorMsg.textContent = "";
+        });
+
+        // Khi bấm nút Đăng Ký Mới trên thanh tab
+        tabRegister.addEventListener("click", function() {
+            isLoginMode = false;
+            tabRegister.classList.add("active");
+            tabLogin.classList.remove("active");
+            groupAdminCode.classList.remove("hidden"); // Hiện ô mã kích hoạt
+            formTitle.textContent = "Đăng Ký Tài Khoản Mới";
+            submitBtn.textContent = "Đăng Ký";
+            errorMsg.textContent = "";
+        });
+
+        // Danh sách mã admin hợp lệ
         const validAdminCodes = ["PVK-0303A", "ADMIN2026", "VIP999"];
 
-        document.getElementById("login-btn").addEventListener("click", function() {
+        // Xử lý khi bấm nút xác nhận dưới cùng
+        submitBtn.addEventListener("click", function() {
             const user = document.getElementById("username").value.trim();
             const pass = document.getElementById("password").value.trim();
-            const code = document.getElementById("admin-code").value.trim();
-            const errorMsg = document.getElementById("error-msg");
 
-            // Kiểm tra xem đã nhập đủ thông tin chưa
             if (user === "" || pass === "") {
+                errorMsg.style.color = "red";
                 errorMsg.textContent = "Vui lòng nhập đầy đủ tài khoản và mật khẩu!";
                 return;
             }
 
-            if (code === "") {
-                errorMsg.textContent = "Vui lòng nhập mã kích hoạt do Admin cấp!";
-                return;
-            }
-
-            // Kiểm tra xem mã admin có khớp không
-            if (validAdminCodes.includes(code)) {
+            if (isLoginMode) {
+                // Xử lý logic Đăng Nhập
                 errorMsg.style.color = "green";
                 errorMsg.textContent = "Đăng nhập thành công! Đang chuyển hướng...";
-                
-                // Chuyển sang trang chọn môn học (home.html) sau 1 giây
                 setTimeout(function() {
                     window.location.href = "home.html";
                 }, 1000);
             } else {
-                errorMsg.style.color = "red";
-                errorMsg.textContent = "Mã kích hoạt không đúng hoặc chưa được cấp!";
+                // Xử lý logic Đăng Ký (Phải kiểm tra mã admin)
+                const code = document.getElementById("admin-code").value.trim();
+                if (code === "") {
+                    errorMsg.style.color = "red";
+                    errorMsg.textContent = "Vui lòng nhập mã kích hoạt do Admin cấp để đăng ký!";
+                    return;
+                }
+
+                if (validAdminCodes.includes(code)) {
+                    errorMsg.style.color = "green";
+                    errorMsg.textContent = "Đăng ký thành công! Đang chuyển vào trang chính...";
+                    setTimeout(function() {
+                        window.location.href = "home.html";
+                    }, 1000);
+                } else {
+                    errorMsg.style.color = "red";
+                    errorMsg.textContent = "Mã kích hoạt không chính xác!";
+                }
             }
         });
     </script>
