@@ -471,3 +471,9 @@ body {
         display: none !important;
     }
 }
+/* Đảm bảo các thẻ liên kết bấm được và nằm trên cùng */
+.the-mon-hoc, a {
+    position: relative !important;
+    z-index: 10 !important;
+    pointer-events: auto !important;
+}
