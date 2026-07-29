@@ -437,41 +437,43 @@ body {
     text-align: center;
     margin-top: 30px;
 }
-/* --- BỔ SUNG TỐI ƯU GIAO DIỆN TRÊN ĐIỆN THOẠI --- */
+/* --- TỐI ƯU GIAO DIỆN TRANG CHỦ CHO ĐIỆN THOẠI (CẬP NHẬT) --- */
 @media screen and (max-width: 768px) {
-    header, .menu-bar, div[style*="background"] {
+    /* 1. Tùy chỉnh phần chứa các môn học */
+    body {
         display: flex !important;
         flex-direction: column !important;
-        align-items: stretch !important;
+        align-items: center !important; /* Căn giữa mọi thứ theo chiều ngang */
+        justify-content: flex-start !important;
+        padding: 10px !important;
         width: 100% !important;
-        box-sizing: border-box;
+        overflow-x: hidden !important; /* Ngăn chặn cuộn ngang */
     }
 
-    header button, .menu-bar button, div[style*="background"] button {
+    /* 2. Ẩn các hoa tuyết gây rối mắt trên điện thoại (tùy chọn) */
+    .snowflake {
+        display: none !important;
+    }
+
+    /* 3. Ép các thẻ môn học (màu hồng) xếp dọc và căn giữa */
+    /* Sử dụng các selector bao quát để bắt được các thẻ môn của bạn */
+    div[style*="background-color: pink"], 
+    div[style*="background: pink"],
+    .the-mon, .box-mon {
+        display: block !important;
+        width: 85% !important;      /* Chiếm 85% chiều rộng màn hình */
+        max-width: 300px !important; /* Không quá to */
+        margin: 10px auto !important; /* Canh giữa và tạo khoảng cách trên dưới */
+        float: none !important;      /* Bỏ chế độ nổi */
+        position: static !important; /* Bỏ định vị tuyệt đối */
+        left: auto !important;
+        box-sizing: border-box !important;
+    }
+
+    /* 4. Đảm bảo chữ trong thẻ môn học hiển thị đúng */
+    div[style*="background-color: pink"] div,
+    .the-mon h3 {
+        text-align: center !important;
         width: 100% !important;
-        margin: 4px 0 !important;
-        font-size: 14px !important;
-        padding: 8px !important;
-    }
-
-    .hop-dang-nhap {
-        width: 90% !important;
-        margin: 20px auto !important;
-        padding: 20px !important;
-    }
-}
-/* --- ÉP CÁC Ô CHỌN MÔN HỌC XẾP DỌC TRÊN ĐIỆN THOẠI --- */
-@media screen and (max-width: 768px) {
-    /* Tìm đến thẻ chứa các ô môn học và chuyển sang dạng cột dọc */
-    .danh-sach-mon, .container-mon, div[style*="display: flex"], body {
-        flex-direction: column !important;
-        align-items: center !important;
-    }
-
-    /* Thu nhỏ chiều rộng các thẻ môn học (màu hồng) để không bị tràn màn hình */
-    .the-mon, .hop-mon, div[class*="mon"], div[style*="background: pink"], div[style*="background-color: pink"] {
-        width: 85% !important;
-        max-width: 300px !important;
-        margin: 10px auto !important;
     }
 }
