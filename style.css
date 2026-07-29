@@ -437,43 +437,37 @@ body {
     text-align: center;
     margin-top: 30px;
 }
-/* --- TỐI ƯU GIAO DIỆN TRANG CHỦ CHO ĐIỆN THOẠI (CẬP NHẬT) --- */
+/* --- TỐI ƯU CỐ ĐỊNH TẤT CẢ CÁC MÔN HỌC TRÊN ĐIỆN THOẠI --- */
 @media screen and (max-width: 768px) {
-    /* 1. Tùy chỉnh phần chứa các môn học */
-    body {
+    /* Ép toàn bộ khung chứa hiển thị theo chiều dọc và căn giữa tuyệt đối */
+    body, html {
         display: flex !important;
         flex-direction: column !important;
-        align-items: center !important; /* Căn giữa mọi thứ theo chiều ngang */
+        align-items: center !important;
         justify-content: flex-start !important;
-        padding: 10px !important;
         width: 100% !important;
-        overflow-x: hidden !important; /* Ngăn chặn cuộn ngang */
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow-x: hidden !important;
     }
 
-    /* 2. Ẩn các hoa tuyết gây rối mắt trên điện thoại (tùy chọn) */
-    .snowflake {
-        display: none !important;
-    }
-
-    /* 3. Ép các thẻ môn học (màu hồng) xếp dọc và căn giữa */
-    /* Sử dụng các selector bao quát để bắt được các thẻ môn của bạn */
+    /* Gom tất cả các khối môn học (kể cả ô Toán bị lệch) về một cột chính giữa */
     div[style*="background-color: pink"], 
     div[style*="background: pink"],
-    .the-mon, .box-mon {
+    div[class*="mon"], .the-mon, .hop-mon {
         display: block !important;
-        width: 85% !important;      /* Chiếm 85% chiều rộng màn hình */
-        max-width: 300px !important; /* Không quá to */
-        margin: 10px auto !important; /* Canh giữa và tạo khoảng cách trên dưới */
-        float: none !important;      /* Bỏ chế độ nổi */
-        position: static !important; /* Bỏ định vị tuyệt đối */
+        position: relative !important;
         left: auto !important;
+        right: auto !important;
+        margin: 12px auto !important;
+        width: 85% !important;
+        max-width: 300px !important;
+        float: none !important;
         box-sizing: border-box !important;
     }
 
-    /* 4. Đảm bảo chữ trong thẻ môn học hiển thị đúng */
-    div[style*="background-color: pink"] div,
-    .the-mon h3 {
-        text-align: center !important;
-        width: 100% !important;
+    /* Ẩn các hiệu ứng tuyết rơi nếu gây cản trở trên màn hình nhỏ */
+    .snowflake {
+        display: none !important;
     }
 }
