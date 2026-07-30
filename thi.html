@@ -114,21 +114,41 @@
             let tempDiv = document.createElement('div');
             tempDiv.innerHTML = html;
             
+            let elements = tempDiv.children;
             let dsTam = [];
-            // Ép nhận toàn bộ nội dung file làm 1 khối hiển thị thẳng lên màn hình để giải quyết triệt để lỗi đứng hình
-            dsTam.push({ 
-                noiDung: html, 
-                textFull: tempDiv.innerText || "", 
-                loai: "ngan", 
-                dapAnUser: {} 
-            });
+            let cauHienTai = { noiDung: "", textFull: "", loai: "trac_nghiem", dapAnUser: {} };
 
-            // Kích hoạt MathJax quét và dịch toàn bộ công thức ngay lập tức
-            setTimeout(() => {
-                if (window.MathJax && window.MathJax.typesetPromise) {
-                    MathJax.typesetPromise().catch((err) => console.log(err));
+            if (elements.length === 0) {
+                dsTam.push({ noiDung: html, textFull: html, loai: "ngan", dapAnUser: {} });
+            } else {
+                for (let i = 0; i < elements.length; i++) {
+                    let text = elements[i].innerText || "";
+                    let tlower = text.toLowerCase();
+                    
+                    // Nhận diện từng câu hỏi dựa theo từ khóa "câu" hoặc "bài"
+                    if (tlower.trim().startsWith("câu") || tlower.trim().startsWith("bai")) {
+                        if (cauHienTai.noiDung !== "") {
+                            dsTam.push(phanLoaiCauHoi(cauHienTai));
+                        }
+                        cauHienTai = { noiDung: elements[i].outerHTML, textFull: text, loai: "trac_nghiem", dapAnUser: {} };
+                    } else {
+                        if (cauHienTai.noiDung === "") {
+                            cauHienTai.noiDung = elements[i].outerHTML;
+                            cauHienTai.textFull += " " + text;
+                        } else {
+                            cauHienTai.noiDung += "<br>" + elements[i].outerHTML;
+                            cauHienTai.textFull += " " + text;
+                        }
+                    }
                 }
-            }, 100);
+                if (cauHienTai.noiDung !== "") {
+                    dsTam.push(phanLoaiCauHoi(cauHienTai));
+                }
+            }
+
+            if (dsTam.length === 0) {
+                dsTam.push({ noiDung: html, textFull: html, loai: "ngan", dapAnUser: {} });
+            }
 
             return dsTam;
         }
