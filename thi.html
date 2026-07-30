@@ -113,10 +113,10 @@
         function phanTichDeThi(html) {
             let tempDiv = document.createElement('div');
             
-            // Bộ lọc siêu bao quát: Tự động gom tất cả các cụm chứa mã LaTeX hoặc ký hiệu toán/lý trong file Word
+            // Bộ lọc an toàn: Chỉ tự động bọc các biểu thức toán/lý có chứa lệnh LaTeX chuyên dụng, giữ nguyên chữ tiếng Việt
             let cleanHtml = html
-                .replace(/([0-9,.\-+*/=<>a-zA-Z\s\(\)\^\\{}°]+(?:\\text|\\circ|\\frac|\\int|\\sqrt|\\sum|\\lim|_|\^)[^<]*)/g, '$$$1$$')
-                .replace(/\$\$+/g, '$$'); // Tránh bị lặp dấu đô la
+                .replace(/([0-9a-zA-Z\s\(\)]+\\(?:text|frac|int|sqrt|sum|lim|log|ln|sin|cos|tan|cot|begin|end)[^<]*)/g, '$$$1$$')
+                .replace(/([0-9]+(?:\^[a-zA-Z0-9\{\}\-\+\*\/]+|_[\-a-zA-Z0-9\{\}\+\*\/]+)+)/g, '$$$1$$');
 
             tempDiv.innerHTML = cleanHtml;
             
