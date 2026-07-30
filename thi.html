@@ -259,50 +259,54 @@
 function nopBai() {
     if (!confirm("Bạn có chắc chắn muốn nộp bài không?")) return;
 
-    let dapAnChuan = deHienTai.dapAnChuan || {}; 
-    let diemTong = 0;
-    let soCauDung = 0;
-    let tongSoCau = danhSachCauHoi.length;
+    try {
+        let dapAnChuan = (typeof deHienTai !== 'undefined' && deHienTai.dapAnChuan) ? deHienTai.dapAnChuan : {}; 
+        let dsCau = (typeof danhSachCauHoi !== 'undefined') ? danhSachCauHoi : [];
+        
+        let soCauDung = 0;
+        let tongSoCau = dsCau.length;
 
-    danhSachCauHoi.forEach((cau, index) => {
-        let cauSo = index + 1;
-        let userAns = cau.dapAnUser || {};
-        let chuanAns = dapAnChuan[cauSo] || ""; 
+        dsCau.forEach((cau, index) => {
+            let cauSo = index + 1;
+            let userAns = cau.dapAnUser || {};
+            let chuanAns = dapAnChuan[cauSo] || ""; 
 
-        if (cau.loai === "trac_nghiem") {
-            if (userAns.chon && userAns.chon.trim().toUpperCase() === chuanAns.trim().toUpperCase()) {
-                soCauDung++;
-            }
-        } 
-        else if (cau.loai === "dung_sai") {
-            let dungHet = true;
-            let subKeys = ['a', 'b', 'c', 'd'];
-            subKeys.forEach(key => {
-                if (userAns[key] !== (chuanAns[key] || "")) {
-                    dungHet = false;
+            if (cau.loai === "trac_nghiem") {
+                if (userAns.chon && userAns.chon.trim().toUpperCase() === chuanAns.trim().toUpperCase()) {
+                    soCauDung++;
                 }
-            });
-            if (dungHet && Object.keys(userAns).length > 0) soCauDung++;
-        } 
-        else if (cau.loai === "tra_loi_ngan" || cau.loai === "ngan") {
-            if (userAns.ngan && userAns.ngan.trim().toLowerCase() === chuanAns.trim().toLowerCase()) {
-                soCauDung++;
+            } 
+            else if (cau.loai === "dung_sai") {
+                let dungHet = true;
+                let subKeys = ['a', 'b', 'c', 'd'];
+                subKeys.forEach(key => {
+                    if (userAns[key] !== (chuanAns[key] || "")) {
+                        dungHet = false;
+                    }
+                });
+                if (dungHet && Object.keys(userAns).length > 0) soCauDung++;
+            } 
+            else if (cau.loai === "tra_loi_ngan" || cau.loai === "ngan") {
+                if (userAns.ngan && userAns.ngan.trim().toLowerCase() === chuanAns.trim().toLowerCase()) {
+                    soCauDung++;
+                }
             }
-        }
-    });
+        });
 
-    diemTong = ((soCauDung / tongSoCau) * 10).toFixed(2);
+        let diemTong = tongSoCau > 0 ? ((soCauDung / tongSoCau) * 10).toFixed(2) : 0;
 
-    let khung = document.getElementById('khung-hien-thi-de');
-    if (khung) {
+        // Tìm khung hiển thị hoặc thay thế toàn bộ body nếu không tìm thấy khung
+        let khung = document.getElementById('khung-hien-thi-de') || document.body;
+        
         khung.innerHTML = `
-            <div style="text-align: center; padding: 40px; background: #fff; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-top: 20px;">
+            <div style="text-align: center; padding: 50px; background: #fff; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); max-width: 500px; margin: 50px auto;">
                 <h2 style="color: #27ae60; margin-bottom: 15px;">Kết Quả Bài Làm</h2>
-                <p style="font-size: 18px; margin-bottom: 10px;">Số câu đúng: <b>${soCauDung} / ${tongSoCau}</b></p>
-                <p style="font-size: 24px; color: #e74c3e; font-weight: bold; margin-bottom: 20px;">Điểm số: ${diemTong} điểm</p>
-                <button onclick="location.reload()" style="padding: 10px 25px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold;">Làm lại bài</button>
+                <p style="font-size: 18px; margin-bottom: 10px;">Số câu trả lời đúng: <b>${soCauDung} / ${tongSoCau}</b></p>
+                <p style="font-size: 28px; color: #e74c3e; font-weight: bold; margin-bottom: 25px;">Điểm số: ${diemTong} / 10 điểm</p>
+                <button onclick="location.href='danhsachde.html'" style="padding: 12px 25px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold;">Quay lại danh sách đề</button>
             </div>
         `;
+    } catch (err) {
+        alert("Đã xảy ra lỗi khi chấm bài: " + err.message);
     }
 }
-</script>
