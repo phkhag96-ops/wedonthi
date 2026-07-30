@@ -7,42 +7,52 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Thanh menu phía trên -->
-    <header style="background: rgb(8, 34, 12); padding: 10px; display: flex; justify-content: space-between; align-items: center; color: white;">
+    <header style="background: #e74c3c; padding: 15px; display: flex; justify-content: space-between; align-items: center; color: white;">
         <h3 id="tieu-de-mon" style="margin: 0;">Danh Sách Đề Thi</h3>
         <div>
-            <button onclick="location.href='home.html'">Trang Chủ</button>
-            <button onclick="location.href='index.html'">Đăng xuất</button>
+            <button onclick="location.href='themde.html'" style="background: #27ae60; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin-right: 10px;">+ Thêm Đề Mới</button>
+            <button onclick="location.href='home.html'" style="padding: 8px 15px; cursor: pointer;">Trang Chủ</button>
         </div>
     </header>
 
-    <!-- Khung chứa danh sách các đề -->
-    <div style="display: flex; justify-content: center; align-items: center; min-height: 80vh; padding: 20px;">
-        <div class="hop-dang-nhap" style="background: white; width: 100%; max-width: 500px; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
-            
+    <div style="display: flex; justify-content: center; padding: 30px;">
+        <div style="background: white; width: 100%; max-width: 600px; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
             <h2 style="text-align: center; margin-bottom: 25px; color: #2c3e50;">Chọn Đề Kiểm Tra</h2>
             
-            <!-- DANH SÁCH CÁC ĐỀ THI (Sau này bạn muốn tự thêm đề thì cứ copy dòng thẻ <a> dưới dán thêm vào) -->
-            <div style="display: flex; flex-direction: column; gap: 12px;">
-                <a href="thi.html?de=1" class="nut-xac-nhan" style="background: #3498db; color: white; padding: 12px; text-align: center; text-decoration: none; border-radius: 5px; font-weight: bold; display: block;">Đề Số 1: Kiểm Tra 45 Phút</a>
-                <a href="thi.html?de=2" class="nut-xac-nhan" style="background: #3498db; color: white; padding: 12px; text-align: center; text-decoration: none; border-radius: 5px; font-weight: bold; display: block;">Đề Số 2: Kiểm Tra 1 Tiết (Giữa Kỳ)</a>
-                <a href="thi.html?de=3" class="nut-xac-nhan" style="background: #3498db; color: white; padding: 12px; text-align: center; text-decoration: none; border-radius: 5px; font-weight: bold; display: block;">Đề Số 3: Thi Cuối Học Kỳ</a>
-                
-                <!-- BẠN MUỐN THÊM ĐỀ MỚI (ĐỀ 4, ĐỀ 5...) THÌ CỨ COPY DÒNG DƯỚI ĐÂY DÁN THÊM VÀO: -->
-                <!-- <a href="thi.html?de=4" class="nut-xac-nhan" style="background: #3498db; color: white; padding: 12px; text-align: center; text-decoration: none; border-radius: 5px; font-weight: bold; display: block;">Đề Số 4: Tên đề của bạn ở đây</a> -->
+            <!-- Khu vực hiển thị danh sách đề tự động -->
+            <div id="danh-sach-hien-thi" style="display: flex; flex-direction: column; gap: 12px;">
+                <!-- Các đề được thêm sẽ hiển thị ở đây -->
             </div>
-
         </div>
     </div>
 
-    <!-- Script tự động đổi tên tiêu đề theo môn bạn chọn ở trang chủ -->
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const mon = urlParams.get('mon');
+        const mon = urlParams.get('mon') || 'toan';
+        
         const tieuDeMon = document.getElementById('tieu-de-mon');
         if (mon === 'toan') tieuDeMon.innerText = 'Danh Sách Đề Thi - Môn Toán';
         else if (mon === 'ly') tieuDeMon.innerText = 'Danh Sách Đề Thi - Môn Vật Lý';
         else if (mon === 'tin') tieuDeMon.innerText = 'Danh Sách Đề Thi - Môn Tin Học';
+
+        // Lấy danh sách đề từ LocalStorage
+        const danhSachDe = JSON.parse(localStorage.getItem('kho_de_thi')) || { toan: [], ly: [], tin: [] };
+        const deCuaMon = danhSachDe[mon] || [];
+        
+        const container = document.getElementById('danh-sach-hien-thi');
+
+        if (deCuaMon.length === 0) {
+            container.innerHTML = `<p style="text-align: center; color: #7f8c8d;">Chưa có đề nào trong môn này. Hãy bấm nút <b>"+ Thêm Đề Mới"</b> ở góc trên để tạo đề nhé!</p>`;
+        } else {
+            deCuaMon.forEach((de, index) => {
+                let btn = document.createElement('a');
+                btn.href = `thi.html?mon=${mon}&id=${de.id}`;
+                btn.className = 'nut-xac-nhan';
+                btn.style.cssText = "background: #3498db; color: white; padding: 12px; text-align: center; text-decoration: none; border-radius: 5px; font-weight: bold; display: block;";
+                btn.innerText = `Đề số ${index + 1}: ${de.ten}`;
+                container.appendChild(btn);
+            });
+        }
     </script>
 </body>
 </html>

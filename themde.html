@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm Đề Thi Mới - PVK</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header style="background: #27ae60; padding: 15px; display: flex; justify-content: space-between; align-items: center; color: white;">
+        <h3 style="margin: 0;">Trang Quản Trị - Thêm Đề Thi</h3>
+        <div>
+            <button onclick="location.href='home.html'" style="padding: 8px 15px; cursor: pointer;">Trang Chủ</button>
+        </div>
+    </header>
+
+    <div style="display: flex; justify-content: center; padding: 30px;">
+        <div style="background: white; width: 100%; max-width: 600px; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <h2 style="color: #2c3e50; text-align: center; margin-bottom: 20px;">Tạo Đề Thi & Chèn Vào Môn Học</h2>
+            
+            <form id="form-them-de" onsubmit="luuDeThi(event)">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 8px;">Chọn Môn Học:</label>
+                    <select id="chon-mon" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                        <option value="toan">Môn Toán</option>
+                        <option value="ly">Môn Vật Lý</option>
+                        <option value="tin">Môn Tin Học</option>
+                    </select>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 8px;">Tên Đề Thi (Ví dụ: Đề 15 Phút Số 1, Đề Giữa Kỳ...):</label>
+                    <input type="text" id="ten-de" required placeholder="Nhập tên đề..." style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 8px;">Chèn Nội Dung / File Đề (Mã HTML câu hỏi hoặc chữ):</label>
+                    <textarea id="noi-dung-de" rows="6" required placeholder="Dán nội dung câu hỏi trắc nghiệm vào đây..." style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;"></textarea>
+                </div>
+
+                <button type="submit" style="background: #3498db; color: white; padding: 12px; border: none; border-radius: 5px; width: 100%; font-size: 16px; font-weight: bold; cursor: pointer;">Lưu Đề Thi Vào Hệ Thống</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function luuDeThi(e) {
+            e.preventDefault();
+            const mon = document.getElementById('chon-mon').value;
+            const tenDe = document.getElementById('ten-de').value;
+            const noiDung = document.getElementById('noi-dung-de').value;
+
+            // Lấy danh sách đề cũ từ bộ nhớ trình duyệt (LocalStorage)
+            let danhSachDe = JSON.parse(localStorage.getItem('kho_de_thi')) || { toan: [], ly: [], tin: [] };
+
+            // Thêm đề mới vào đúng môn tương ứng
+            danhSachDe[mon].push({ id: Date.now(), ten: tenDe, htmlContent: noiDung });
+
+            // Lưu ngược lại vào bộ nhớ
+            localStorage.setItem('kho_de_thi', JSON.stringify(danhSachDe));
+
+            alert("Đã thêm đề thi thành công! Bạn có thể ra sảnh chọn môn để kiểm tra.");
+            document.getElementById('form-them-de').reset();
+        }
+    </script>
+</body>
+</html>
