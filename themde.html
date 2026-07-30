@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thêm Đề Thi Mới - PVK</title>
+    <title>Thêm Đề Thi - PVK</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header style="background: #27ae60; padding: 15px; display: flex; justify-content: space-between; align-items: center; color: white;">
         <h3 style="margin: 0;">Trang Quản Trị - Thêm Đề Thi</h3>
-        <div>
-            <button onclick="location.href='home.html'" style="padding: 8px 15px; cursor: pointer;">Trang Chủ</button>
-        </div>
+        <button onclick="location.href='home.html'" style="padding: 8px 15px; cursor: pointer; background: white; border: none; border-radius: 4px; font-weight: bold;">Trang Chủ</button>
     </header>
 
     <div style="display: flex; justify-content: center; padding: 30px;">
@@ -34,8 +32,8 @@
                 </div>
 
                 <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-weight: bold; margin-bottom: 8px;">Chèn Nội Dung / File Đề (Mã HTML câu hỏi hoặc chữ):</label>
-                    <textarea id="noi-dung-de" rows="6" required placeholder="Dán nội dung câu hỏi trắc nghiệm vào đây..." style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;"></textarea>
+                    <label style="display: block; font-weight: bold; margin-bottom: 8px;">Chọn File Đề Thi (File .txt hoặc .html):</label>
+                    <input type="file" id="file-de-thi" accept=".txt, .html" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; background: #f9f9f9;">
                 </div>
 
                 <button type="submit" style="background: #3498db; color: white; padding: 12px; border: none; border-radius: 5px; width: 100%; font-size: 16px; font-weight: bold; cursor: pointer;">Lưu Đề Thi Vào Hệ Thống</button>
@@ -48,19 +46,22 @@
             e.preventDefault();
             const mon = document.getElementById('chon-mon').value;
             const tenDe = document.getElementById('ten-de').value;
-            const noiDung = document.getElementById('noi-dung-de').value;
+            const fileInput = document.getElementById('file-de-thi').files[0];
 
-            // Lấy danh sách đề cũ từ bộ nhớ trình duyệt (LocalStorage)
-            let danhSachDe = JSON.parse(localStorage.getItem('kho_de_thi')) || { toan: [], ly: [], tin: [] };
+            if (fileInput) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const noiDungFile = event.target.result;
 
-            // Thêm đề mới vào đúng môn tương ứng
-            danhSachDe[mon].push({ id: Date.now(), ten: tenDe, htmlContent: noiDung });
+                    let danhSachDe = JSON.parse(localStorage.getItem('kho_de_thi')) || { toan: [], ly: [], tin: [] };
+                    danhSachDe[mon].push({ id: Date.now(), ten: tenDe, htmlContent: noiDungFile });
+                    localStorage.setItem('kho_de_thi', JSON.stringify(danhSachDe));
 
-            // Lưu ngược lại vào bộ nhớ
-            localStorage.setItem('kho_de_thi', JSON.stringify(danhSachDe));
-
-            alert("Đã thêm đề thi thành công! Bạn có thể ra sảnh chọn môn để kiểm tra.");
-            document.getElementById('form-them-de').reset();
+                    alert("Đã tải file đề thi lên và lưu thành công!");
+                    document.getElementById('form-them-de').reset();
+                };
+                reader.readAsText(fileInput);
+            }
         }
     </script>
 </body>
