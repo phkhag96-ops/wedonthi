@@ -49,6 +49,9 @@
             const mon = document.getElementById('chon-mon').value;
             const tenDe = document.getElementById('ten-de').value;
             const fileInput = document.getElementById('file-de-thi').files[0];
+            // Dán đoạn này ở file themde.html (chỗ xử lý lưu đề)
+localStorage.setItem("dapAn_" + deMoi.id, JSON.stringify(deMoi.dapAnChuan));
+localStorage.setItem("currentMaDe", deMoi.id);
 
             if (fileInput) {
                 const fileName = fileInput.name.toLowerCase();
@@ -66,16 +69,16 @@
                                let danhSachDe = JSON.parse(localStorage.getItem('kho_de_thi')) || { toan: [], ly: [], tin: [] };
                     
                     let deMoi = {
-                        id: Date.now(),
-                        ten: tenDe,
-                        htmlContent: htmlContent,
-                        dapAnChuan: { 
-                            1: "A", 
-                            2: "B", 
-                            3: { a: "đúng", b: "sai", c: "đúng", d: "sai" }, 
-                            4: "150" 
-                        }
-                    };
+    id: Date.now(),
+    ten: tenDe,
+    htmlContent: htmlContent,
+    dapAnChuan: [
+        "A",                      // Câu 0: Trắc nghiệm chọn A
+        "dung",                   // Câu 1: Đúng/Sai (hoặc true)
+        "150",                    // Câu 2: Trả lời ngắn điền số 150
+        ["dung", "sai", "dung"]   // Câu 3: Câu hỏi nhiều ý đúng/sai (nếu có)
+    ]
+};
 
                     danhSachDe[mon].push(deMoi);
                     localStorage.setItem('kho_de_thi', JSON.stringify(danhSachDe));

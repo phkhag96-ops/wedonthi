@@ -255,19 +255,40 @@
         }
         </script>
     <script>
-    document.getElementById('btn-nop-bai').onclick = function(e) {
+document.getElementById('btn-nop-bai').onclick = function(e) {
     e.preventDefault();
     
-    if (confirm("Bạn có chắc chắn muốn nộp bài không?")) {
+    if (confirm("Bạn có chắc chắn muốn nộp bài và chấm điểm không?")) {
+        const maDeDangThi = localStorage.getItem("currentMaDe"); 
+        const dapAnChuan = JSON.parse(localStorage.getItem("dapAn_" + maDeDangThi)) || []; 
+        
+        let soCauDung = 0;
+        let tongSoCau = dapAnChuan.length;
+
+        if (tongSoCau === 0) {
+            alert("Không tìm thấy dữ liệu đáp án của đề này!");
+            return;
+        }
+
+        for (let i = 0; i < tongSoCau; i++) {
+            const luaChon = document.querySelector(`input[name="cau_${i}"]:checked`);
+            const dapanHocSinh = luaChon ? luaChon.value : "";
+
+            if (dapanHocSinh === dapAnChuan[i]) {
+                soCauDung++;
+            }
+        }
+
+        let diem = (soCauDung / tongSoCau) * 10;
+
         document.body.innerHTML = `
-            <div style="font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f4f6f7; margin: 0;">
-                <div style="text-align: center; padding: 40px; background: #fff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); max-width: 450px; width: 100%;">
-                    <h2 style="color: #27ae60; margin-bottom: 15px;">Kết Quả Bài Làm</h2>
-                    <p style="font-size: 18px; color: #333; margin-bottom: 10px;">Đã nộp bài thành công!</p>
-                    <p style="font-size: 32px; color: #e74c3e; font-weight: bold; margin: 20px 0;">Điểm số: 10.0 / 10 điểm</p>
-                    <a href="danhsachde.html" style="display: inline-block; padding: 12px 25px; background: #3498db; color: white; text-decoration: none; border-radius: 6px; font-size: 16px; font-weight: bold; width: 100%; box-sizing: border-box;">Quay lại danh sách đề</a>
-                </div>
+            <div style="text-align: center; padding: 50px; font-family: Arial;">
+                <h2>Kết quả bài làm</h2>
+                <p>Số câu đúng: ${soCauDung} / ${tongSoCau}</p>
+                <p>Điểm của bạn: <b style="color: red; font-size: 24px;">${diem.toFixed(2)} điểm</b></p>
+                <br>
+                <a href="danhsachde.html" style="padding: 10px 20px; background: #27ae60; color: white; text-decoration: none; border-radius: 5px;">Quay lại danh sách đề</a>
             </div>
         `;
     }
-};
+};    
