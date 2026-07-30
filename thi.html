@@ -258,16 +258,12 @@
 // Đảm bảo đoạn code này nằm gọn bên trong thẻ script ở cuối file thi.html
 // Tự động tìm nút nộp bài và gán sự kiện click an toàn
 document.addEventListener("DOMContentLoaded", function() {
-    let btnNop = document.querySelector("button[onclick*='nopBai']") || document.getElementById("btn-nop-bai");
+    let btnNop = document.getElementById("btn-nop-bai");
     if (btnNop) {
-        // Xóa onclick cũ nếu có để tránh xung đột
-        btnNop.removeAttribute("onclick");
-        
         btnNop.addEventListener("click", function(e) {
             e.preventDefault();
             if (!confirm("Bạn có chắc chắn muốn nộp bài không?")) return;
 
-            // Hiển thị bảng kết quả ra màn hình ngay lập tức
             document.body.innerHTML = `
                 <div style="font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f4f6f7; margin: 0;">
                     <div style="text-align: center; padding: 40px; background: #fff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); max-width: 450px; width: 100%;">
