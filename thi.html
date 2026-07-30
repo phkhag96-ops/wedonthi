@@ -113,10 +113,11 @@
        function phanTichDeThi(html) {
             let tempDiv = document.createElement('div');
             
-            // Bộ lọc siêu bao quát: Tự động gom tất cả các cụm chứa mã LaTeX hoặc ký hiệu toán/lý trong file Word
+            // Xử lý làm sạch toàn diện: Giữ nguyên vẹn khoảng trắng và tự động bọc mọi dạng công thức, ký hiệu từ Word
             let cleanHtml = html
-                .replace(/([0-9,.\-+*/=<>a-zA-Z\s\(\)\^\\{}°]+(?:\\text|\\circ|\\frac|\\int|\\sqrt|\\sum|\\lim|_|\^)[^<]*)/g, '$$$1$$')
-                .replace(/\$\$+/g, '$$'); // Tránh bị lặp dấu đô la
+                .replace(/([a-zàáảãạăắằẳẵặâấầẩẫậđeéẻẽẹêếỀểễệiíỉĩịoóỏõôốồổỗộơớờởỡợuúủũụưứừửữựýỷỹỵ])([A-ZÀÁẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬĐEÉẺẼẸÊẾỀỂỄỆIÍỈĨỊOÓỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢUÚỦŨỤƯỨỪỬỮỰYÝỶỸỴ])/g, '$1 $2')
+                // Tự động gom các biểu thức toán/lý/hóa có chứa lệnh đặc trưng để MathJax xử lý
+                .replace(/([0-9a-zA-Z\s\(\)\+\-\*\/\.,<>^_\\]+(?:\\text|\\frac|\\int|\\sqrt|\\sum|\\lim|\\log|\\ln|\\sin|\\cos|\\tan|\\cot|\\circ|\\vec|\\Delta|\\alpha|\\beta|\\pi)[^<]*)/g, '$$$1$$');
 
             tempDiv.innerHTML = cleanHtml;
             
@@ -129,27 +130,36 @@
             } else {
                 for (let i = 0; i < elements.length; i++) {
                     let text = elements[i].innerText || "";
-                    let tLower = text.toLowerCase();
-
-                    // Nếu gặp dòng chữ bắt đầu bằng "câu"
-                    if (tLower.trim().startsWith("câu")) {
+                    let tlower = text.toLowerCase();
+                    
+                    if (tlower.trim().startsWith("câu")) {
                         if (cauHienTai.noiDung !== "") {
-                            dsTam.push(phanLoai(cauHienTai));
+                            dsTam.push(phanLoaiCauHoi(cauHienTai));
                         }
                         cauHienTai = { noiDung: elements[i].outerHTML, textFull: text, loai: "trac_nghiem", dapAnUser: {} };
                     } else {
-                        cauHienTai.noiDung += elements[i].outerHTML;
-                        cauHienTai.textFull += " " + text;
+                        if (cauHienTai.noiDung === "") {
+                            cauHienTai.noiDung = elements[i].outerHTML;
+                            cauHienTai.textFull += " " + text;
+                        } else {
+                            cauHienTai.noiDung += "<br>" + elements[i].outerHTML;
+                            cauHienTai.textFull += " " + text;
+                        }
                     }
                 }
                 if (cauHienTai.noiDung !== "") {
-                    dsTam.push(phanLoai(cauHienTai));
+                    dsTam.push(phanLoaiCauHoi(cauHienTai));
                 }
             }
 
-            danhSachCauHoi = dsTam.length > 0 ? dsTam : [{ noiDung: html, textFull: "", loai: "ngan", dapAnUser: {} }];
-            taoBangSoCau();
-            hienThiCauHoi(0);
+            // Kích hoạt MathJax quét lại toàn bộ giao diện sau khi load xong
+            setTimeout(() => {
+                if (window.MathJax && window.MathJax.typesetPromise) {
+                    MathJax.typesetPromise().catch((err) => console.log(err));
+                }
+            }, 100);
+
+            return dsTam;
         }
 
         function phanLoai(cau) {
