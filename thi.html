@@ -110,15 +110,13 @@
         }
 
         // Thuật toán quét an toàn tuyệt đối, không lo bị treo
-        function phanTichDeThi(html) {
+       function phanTichDeThi(html) {
             let tempDiv = document.createElement('div');
             
-            // Xử lý thông minh: Khôi phục khoảng trắng giữa các từ bị dính và tự động bọc chuẩn công thức toán/lý
+            // Bộ lọc siêu bao quát: Tự động gom tất cả các cụm chứa mã LaTeX hoặc ký hiệu toán/lý trong file Word
             let cleanHtml = html
-                // 1. Tách các chữ bị dính liền phổ biến do mammoth đọc file Word
-                .replace(/([a- và ô m n l t s đ p h e g c r i u y k z x b])([A-ZÀÁẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬĐEÉẺẼẸÊẾỀỂỄỆIÍỈĨỊOÓỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢUÚỦŨỤƯỨỪỬỮỰYÝỶỸỴ])/g, '$1 $2')
-                // 2. Tự động bọc các biểu thức LaTeX có chứa lệnh chuyên dụng hoặc dạng mũ/chỉ số dưới
-                .replace(/([0-9a-zA-Z\s\(\)\+\-\*\/\.,<>^_\\]+(?:\\text|\\frac|\\int|\\sqrt|\\sum|\\lim|\\log|\\ln|\\sin|\\cos|\\tan|\\cot|\\circ|\\vec)[^<]*)/g, '$$$1$$');
+                .replace(/([0-9,.\-+*/=<>a-zA-Z\s\(\)\^\\{}°]+(?:\\text|\\circ|\\frac|\\int|\\sqrt|\\sum|\\lim|_|\^)[^<]*)/g, '$$$1$$')
+                .replace(/\$\$+/g, '$$'); // Tránh bị lặp dấu đô la
 
             tempDiv.innerHTML = cleanHtml;
             
