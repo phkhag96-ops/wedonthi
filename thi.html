@@ -254,39 +254,45 @@
         }
         </script>
     <script>
-document.getElementById('btn-nop-bai').onclick = function(e) {
-    e.preventDefault();
+document.addEventListener('DOMContentLoaded', function() {
+    const btnNop = document.getElementById('btn-nop-bai');
     
-    if (confirm("Bạn có chắc chắn muốn nộp bài và chấm điểm không?")) {
-            const dapAnChuan = deHientai ? deHientai.dapAnChuan : []; 
+    if (btnNop) {
+        btnNop.onclick = function(e) {
+            e.preventDefault();
             
-            let soCauDung = 0;
-            let tongSoCau = dapAnChuan.length;
+            if (confirm("Bạn có chắc chắn muốn nộp bài và chấm điểm không?")) {
+                const dapAnChuan = deHientai ? deHientai.dapAnChuan : []; 
+                
+                let soCauDung = 0;
+                let tongSoCau = dapAnChuan.length;
 
-            if (tongSoCau === 0) {
-                alert("Không tìm thấy dữ liệu đáp án của đề này!");
-                return;
-            }
-
-            for (let i = 0; i < tongSoCau; i++) {
-                const luaChon = document.querySelector(`input[name="cau_${i}"]:checked`);
-                const dapanHocSinh = luaChon ? luaChon.value : "";
-
-                if (dapanHocSinh === dapAnChuan[i]) {
-                    soCauDung++;
+                if (tongSoCau === 0) {
+                    alert("Không tìm thấy dữ liệu đáp án của đề này!");
+                    return;
                 }
-            }    
 
-        let diem = (soCauDung / tongSoCau) * 10;
+                for (let i = 0; i < tongSoCau; i++) {
+                    const luaChon = document.querySelector(`input[name="cau_${i}"]:checked`);
+                    const dapanHocSinh = luaChon ? luaChon.value : "";
 
-        document.body.innerHTML = `
-            <div style="text-align: center; padding: 50px; font-family: Arial;">
-                <h2>Kết quả bài làm</h2>
-                <p>Số câu đúng: ${soCauDung} / ${tongSoCau}</p>
-                <p>Điểm của bạn: <b style="color: red; font-size: 24px;">${diem.toFixed(2)} điểm</b></p>
-                <br>
-                <a href="danhsachde.html" style="padding: 10px 20px; background: #27ae60; color: white; text-decoration: none; border-radius: 5px;">Quay lại danh sách đề</a>
-            </div>
-        `;
+                    if (dapanHocSinh === dapAnChuan[i]) {
+                        soCauDung++;
+                    }
+                }
+
+                let diem = (soCauDung / tongSoCau) * 10;
+
+                document.body.innerHTML = `
+                    <div style="text-align: center; padding: 50px; font-family: Arial;">
+                        <h2>Kết quả bài làm</h2>
+                        <p>Số câu đúng: ${soCauDung} / ${tongSoCau}</p>
+                        <p>Điểm của bạn: <b style="color: red; font-size: 24px;">${diem.toFixed(2)} điểm</b></p>
+                        <br>
+                        <a href="danhsachde.html" style="padding: 10px 20px; background: #27ae60; color: white; text-decoration: none; border-radius: 5px;">Quay lại danh sách đề</a>
+                    </div>
+                `;
+            }
+        };
     }
-};    
+});
