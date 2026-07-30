@@ -112,19 +112,12 @@
         // Thuật toán quét an toàn tuyệt đối, không lo bị treo
        function phanTichDeThi(html) {
             let tempDiv = document.createElement('div');
-            
-            // Xử lý làm sạch an toàn để không bị dính chữ
-            let cleanHtml = html
-                .replace(/([a-zàáảãạăắằẳẵặâấầẩẫậđeéẻẽẹêếỀểễệiíỉĩịoóỏõôốồổỗộơớờởỡợuúủũụưứừửữựýỷỹỵ])([A-ZÀÁẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬĐEÉẺẼẸÊẾỀỂỄỆIÍỈĨỊOÓỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢUÚỦŨỤƯỨỪỬỮỰYÝỶỸỴ])/g, '$1 $2')
-                .replace(/([0-9a-zA-Z\s\(\)\+\-\*\/\.,<>^_\\]+(?:\\text|\\frac|\\int|\\sqrt|\\sum|\\lim|\\log|\\ln|\\sin|\\cos|\\tan|\\cot|\\circ|\\vec)[^<]*)/g, '$$$1$$');
-
-            tempDiv.innerHTML = cleanHtml;
+            tempDiv.innerHTML = html;
             
             let elements = tempDiv.children;
             let dsTam = [];
             let cauHienTai = { noiDung: "", textFull: "", loai: "trac_nghiem", dapAnUser: {} };
 
-            // Nếu file docx không có cấu trúc thẻ rõ ràng, đưa toàn bộ vào màn hình luôn
             if (elements.length === 0) {
                 dsTam.push({ noiDung: html, textFull: html, loai: "ngan", dapAnUser: {} });
             } else {
@@ -132,7 +125,6 @@
                     let text = elements[i].innerText || "";
                     let tlower = text.toLowerCase();
                     
-                    // Chấp nhận cả "câu" viết thường hoặc viết hoa
                     if (tlower.trim().startsWith("câu") || tlower.trim().startsWith("bai")) {
                         if (cauHienTai.noiDung !== "") {
                             dsTam.push(phanLoaiCauHoi(cauHienTai));
@@ -140,7 +132,6 @@
                         cauHienTai = { noiDung: elements[i].outerHTML, textFull: text, loai: "trac_nghiem", dapAnUser: {} };
                     } else {
                         if (cauHienTai.noiDung === "") {
-                            // Nếu chưa gặp từ câu nào, gom hết vào câu đầu tiên để không bị mất chữ
                             cauHienTai.noiDung = elements[i].outerHTML;
                             cauHienTai.textFull += " " + text;
                         } else {
@@ -154,21 +145,19 @@
                 }
             }
 
-            // Phòng hờ trường hợp mảng rỗng thì hiển thị nguyên văn bản gốc
             if (dsTam.length === 0) {
                 dsTam.push({ noiDung: html, textFull: html, loai: "ngan", dapAnUser: {} });
             }
 
-            // Tự động gọi MathJax dịch công thức ngay khi load xong
+            // Gọi MathJax render công thức sau khi tải xong nội dung
             setTimeout(() => {
                 if (window.MathJax && window.MathJax.typesetPromise) {
                     MathJax.typesetPromise().catch((err) => console.log(err));
                 }
-            }, 100);
+            }, 200);
 
             return dsTam;
         }
-
         function phanLoai(cau) {
             let t = cau.textFull.toLowerCase();
             if (t.includes("a)") && t.includes("b)") && (t.includes("đúng") || t.includes("sai") || t.includes("c)") || t.includes("d)"))) {
