@@ -5,22 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phòng Thi Chuẩn 3 Phần - PVK</title>
     <link rel="stylesheet" href="style.css">
-
-    <!-- Cấu hình MathJax nhận diện mọi định dạng LaTeX -->
-    <script>
-        window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']],
-                processEscapes: true
-            },
-            options: {
-                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
-            }
-        };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
     <style>
         body { font-family: Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 0; display: flex; flex-direction: column; height: 100vh; }
         header { background: #27ae60; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
@@ -109,62 +93,49 @@
             location.href = 'danhsachde.html?mon=' + mon;
         }
 
-        // Thuật toán quét an toàn tuyệt đối, không lo bị treo
-       function phanTichDeThi(html) {
+        // Bộ phân tích thông minh nhận diện 3 dạng: Trắc nghiệm, Đúng/Sai, Trả lời ngắn
+        function phanTichDeThi(html) {
             let tempDiv = document.createElement('div');
             tempDiv.innerHTML = html;
             
-            let elements = tempDiv.children;
+            let paragraphs = tempDiv.querySelectorAll('p, div');
             let dsTam = [];
-            let cauHienTai = { noiDung: "", textFull: "", loai: "trac_nghiem", dapAnUser: {} };
+            let cauHienTai = { noiDung: "", textFull: "", dapAnUser: {} };
 
-            if (elements.length === 0) {
-                dsTam.push({ noiDung: html, textFull: tempDiv.innerText || "", loai: "trac_nghiem", dapAnUser: {} });
-            } else {
-                for (let i = 0; i < elements.length; i++) {
-                    let text = elements[i].innerText || "";
-                    let tlower = text.toLowerCase();
-                    
-                    if (tlower.trim().startsWith("câu") || tlower.trim().startsWith("bai")) {
-                        if (cauHienTai.noiDung !== "") {
-                            dsTam.push(phanLoaiCauHoi(cauHienTai));
-                        }
-                        cauHienTai = { noiDung: elements[i].outerHTML, textFull: text, loai: "trac_nghiem", dapAnUser: {} };
-                    } else {
-                        if (cauHienTai.noiDung === "") {
-                            cauHienTai.noiDung = elements[i].outerHTML;
-                            cauHienTai.textFull += " " + text;
-                        } else {
-                            cauHienTai.noiDung += "<br>" + elements[i].outerHTML;
-                            cauHienTai.textFull += " " + text;
-                        }
+            paragraphs.forEach(p => {
+                let text = p.innerText.trim();
+                if (text.startsWith("Câu ") || text.startsWith("CÂU ")) {
+                    if (cauHienTai.noiDung !== "") {
+                        dsTam.push(phanLoaiVaDongGoi(cauHienTai));
                     }
+                    cauHienTai = { noiDung: p.innerHTML, textFull: text, dapAnUser: {} };
+                } else {
+                    cauHienTai.noiDung += "<br>" + p.innerHTML;
+                    cauHienTai.textFull += " " + text;
                 }
-                if (cauHienTai.noiDung !== "") {
-                    dsTam.push(phanLoaiCauHoi(cauHienTai));
-                }
+            });
+            if (cauHienTai.noiDung !== "") {
+                dsTam.push(phanLoaiVaDongGoi(cauHienTai));
             }
 
-            if (dsTam.length === 0) {
-                dsTam.push({ noiDung: html, textFull: tempDiv.innerText || "", loai: "ngan", dapAnUser: {} });
-            }
-
-            return dsTam;
+            danhSachCauHoi = dsTam.length > 0 ? dsTam : [{ noiDung: html, textFull: "", loai: "ngan", dapAnUser: {} }];
+            taoBangSoCau();
+            hienThiCauHoi(0);
         }
 
-        // Đảm bảo hàm phân loại hoạt động trơn tru với các ý A, B, C, D / Đúng sai
-        function phanLoaiCauHoi(cau) {
-            try {
-                let t = cau.textFull ? cau.textFull.toLowerCase() : "";
-                if ((t.includes("a)") && t.includes("b)")) && (t.includes("đúng") || t.includes("sai") || t.includes("đ/s"))) {
-                    cau.loai = "dung_sai";
-                } else if (t.includes("trả lời ngắn") || t.includes("điền khuyết")) {
-                    cau.loai = "ngan";
-                } else {
-                    cau.loai = "trac_nghiem";
-                }
-            } catch (e) {
+        function phanLoaiVaDongGoi(cau) {
+            let t = cau.textFull.toLowerCase();
+            // Nhận diện dạng Đúng / Sai (thường chứa các ý a, b, c, d hoặc từ đúng/sai)
+            if (t.includes("a)") && t.includes("b)") && (t.includes("đúng") || t.includes("sai") || t.includes("c)") || t.includes("d)"))) {
+                cau.loai = "dung_sai";
+            } 
+            // Nhận diện dạng Trắc nghiệm nhiều lựa chọn ABCD
+            else if (t.includes("a.") || t.includes("b.") || t.includes("c.") || t.includes("d.") || (t.includes("a)") && t.includes("b)"))) {
                 cau.loai = "trac_nghiem";
+            } 
+            // Còn lại mặc định là Trả lời ngắn
+            else {
+                cau.loai = "tra_loi_ngan";
             }
             return cau;
         }
@@ -190,6 +161,7 @@
                 b.classList.toggle('dang-chon', idx === index);
             });
 
+            // Gắn nhãn hiển thị loại câu hỏi
             let nhan = document.getElementById('nhan-dang');
             if (cau.loai === "trac_nghiem") {
                 nhan.innerText = `Câu ${index + 1} - Phần I: Trắc nghiệm nhiều lựa chọn`;
@@ -201,87 +173,3 @@
                 nhan.innerText = `Câu ${index + 1} - Phần III: Trả lời ngắn`;
                 nhan.style.background = "#9b59b6";
             }
-
-            document.getElementById('hien-thi-noi-dung-cau').innerHTML = cau.noiDung;
-            // Ép MathJax dịch lại toàn bộ ký hiệu công thức mới
-if (window.MathJax && window.MathJax.typesetPromise) {
-    MathJax.typesetPromise([document.getElementById('hien-thi-noi-dung-cau')]).catch((err) => console.log(err.message));
-}
-            if (window.MathJax) {
-    MathJax.typeset();
-}
-            let khung = document.getElementById('khung-tra-loi');
-            khung.innerHTML = "";
-
-            if (cau.loai === "trac_nghiem") {
-                khung.innerHTML = `
-                    <div style="margin-top: 20px; border-top: 1px dashed #ddd; padding-top: 15px;">
-                        <p style="font-weight: bold; color: #555; margin-bottom: 10px;">Chọn đáp án:</p>
-                        <div style="display: flex; gap: 20px;">
-                            <label><input type="radio" name="tn" value="A" ${cau.dapAnUser.chon === 'A' ? 'checked' : ''} onclick="chonTN('A')"> A</label>
-                            <label><input type="radio" name="tn" value="B" ${cau.dapAnUser.chon === 'B' ? 'checked' : ''} onclick="chonTN('B')"> B</label>
-                            <label><input type="radio" name="tn" value="C" ${cau.dapAnUser.chon === 'C' ? 'checked' : ''} onclick="chonTN('C')"> C</label>
-                            <label><input type="radio" name="tn" value="D" ${cau.dapAnUser.chon === 'D' ? 'checked' : ''} onclick="chonTN('D')"> D</label>
-                        </div>
-                    </div>
-                `;
-            } else if (cau.loai === "dung_sai") {
-                let dsY = ['a', 'b', 'c', 'd'];
-                let htmlDS = `
-                    <div style="margin-top: 20px; border-top: 1px dashed #ddd; padding-top: 15px;">
-                        <p style="font-weight: bold; color: #555; margin-bottom: 10px;">Đánh giá các ý a, b, c, d:</p>
-                        <table class="table-dung-sai">
-                            <tr>
-                                <th>Ý</th>
-                                <th>Đúng</th>
-                                <th>Sai</th>
-                            </tr>
-                `;
-                dsY.forEach(y => {
-                    let val = cau.dapAnUser[y] || '';
-                    htmlDS += `
-                        <tr>
-                            <td>Ý ${y}</td>
-                            <td><input type="radio" name="ds_${y}" value="Dung" ${val === 'Dung' ? 'checked' : ''} onclick="chonDS('${y}', 'Dung')"></td>
-                            <td><input type="radio" name="ds_${y}" value="Sai" ${val === 'Sai' ? 'checked' : ''} onclick="chonDS('${y}', 'Sai')"></td>
-                        </tr>
-                    `;
-                });
-                htmlDS += `</table></div>`;
-                khung.innerHTML = htmlDS;
-            } else {
-                khung.innerHTML = `
-                    <div style="margin-top: 20px; border-top: 1px dashed #ddd; padding-top: 15px;">
-                        <p style="font-weight: bold; color: #555; margin-bottom: 5px;">Nhập câu trả lời ngắn:</p>
-                        <input type="text" class="input-tra-loi-ngan" placeholder="Nhập đáp án của bạn..." value="${cau.dapAnUser.ngan || ''}" oninput="chonNgan(this.value)">
-                    </div>
-                `;
-            }
-        }
-
-        function chonTN(val) {
-            danhSachCauHoi[cauHoiDangXem].dapAnUser.chon = val;
-            document.getElementById(`btn-cau-${cauHoiDangXem}`).classList.add('da-lam');
-        }
-
-        function chonDS(y, val) {
-            if (!danhSachCauHoi[cauHoiDangXem].dapAnUser) danhSachCauHoi[cauHoiDangXem].dapAnUser = {};
-            danhSachCauHoi[cauHoiDangXem].dapAnUser[y] = val;
-            document.getElementById(`btn-cau-${cauHoiDangXem}`).classList.add('da-lam');
-        }
-
-        function chonNgan(val) {
-            danhSachCauHoi[cauHoiDangXem].dapAnUser.ngan = val;
-            let btn = document.getElementById(`btn-cau-${cauHoiDangXem}`);
-            if (val.trim() !== "") btn.classList.add('da-lam');
-            else btn.classList.remove('da-lam');
-        }
-
-        function cauTruoc() {
-            if (cauHoiDangXem > 0) hienThiCauHoi(cauHoiDangXem - 1);
-        }
-
-        function cauSau() {
-            if (cauHoiDangXem < danhSachCauHoi.length - 1) hienThiCauHoi(cauHoiDangXem + 1);
-        }
-    </script>
