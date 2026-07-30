@@ -113,11 +113,10 @@
        function phanTichDeThi(html) {
             let tempDiv = document.createElement('div');
             
-            // Xử lý làm sạch toàn diện: Giữ nguyên vẹn khoảng trắng và tự động bọc mọi dạng công thức, ký hiệu từ Word
+            // Xử lý làm sạch an toàn để không bị dính chữ
             let cleanHtml = html
                 .replace(/([a-zàáảãạăắằẳẵặâấầẩẫậđeéẻẽẹêếỀểễệiíỉĩịoóỏõôốồổỗộơớờởỡợuúủũụưứừửữựýỷỹỵ])([A-ZÀÁẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬĐEÉẺẼẸÊẾỀỂỄỆIÍỈĨỊOÓỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢUÚỦŨỤƯỨỪỬỮỰYÝỶỸỴ])/g, '$1 $2')
-                // Tự động gom các biểu thức toán/lý/hóa có chứa lệnh đặc trưng để MathJax xử lý
-                .replace(/([0-9a-zA-Z\s\(\)\+\-\*\/\.,<>^_\\]+(?:\\text|\\frac|\\int|\\sqrt|\\sum|\\lim|\\log|\\ln|\\sin|\\cos|\\tan|\\cot|\\circ|\\vec|\\Delta|\\alpha|\\beta|\\pi)[^<]*)/g, '$$$1$$');
+                .replace(/([0-9a-zA-Z\s\(\)\+\-\*\/\.,<>^_\\]+(?:\\text|\\frac|\\int|\\sqrt|\\sum|\\lim|\\log|\\ln|\\sin|\\cos|\\tan|\\cot|\\circ|\\vec)[^<]*)/g, '$$$1$$');
 
             tempDiv.innerHTML = cleanHtml;
             
@@ -125,6 +124,7 @@
             let dsTam = [];
             let cauHienTai = { noiDung: "", textFull: "", loai: "trac_nghiem", dapAnUser: {} };
 
+            // Nếu file docx không có cấu trúc thẻ rõ ràng, đưa toàn bộ vào màn hình luôn
             if (elements.length === 0) {
                 dsTam.push({ noiDung: html, textFull: html, loai: "ngan", dapAnUser: {} });
             } else {
@@ -132,13 +132,15 @@
                     let text = elements[i].innerText || "";
                     let tlower = text.toLowerCase();
                     
-                    if (tlower.trim().startsWith("câu")) {
+                    // Chấp nhận cả "câu" viết thường hoặc viết hoa
+                    if (tlower.trim().startsWith("câu") || tlower.trim().startsWith("bai")) {
                         if (cauHienTai.noiDung !== "") {
                             dsTam.push(phanLoaiCauHoi(cauHienTai));
                         }
                         cauHienTai = { noiDung: elements[i].outerHTML, textFull: text, loai: "trac_nghiem", dapAnUser: {} };
                     } else {
                         if (cauHienTai.noiDung === "") {
+                            // Nếu chưa gặp từ câu nào, gom hết vào câu đầu tiên để không bị mất chữ
                             cauHienTai.noiDung = elements[i].outerHTML;
                             cauHienTai.textFull += " " + text;
                         } else {
@@ -152,7 +154,12 @@
                 }
             }
 
-            // Kích hoạt MathJax quét lại toàn bộ giao diện sau khi load xong
+            // Phòng hờ trường hợp mảng rỗng thì hiển thị nguyên văn bản gốc
+            if (dsTam.length === 0) {
+                dsTam.push({ noiDung: html, textFull: html, loai: "ngan", dapAnUser: {} });
+            }
+
+            // Tự động gọi MathJax dịch công thức ngay khi load xong
             setTimeout(() => {
                 if (window.MathJax && window.MathJax.typesetPromise) {
                     MathJax.typesetPromise().catch((err) => console.log(err));
