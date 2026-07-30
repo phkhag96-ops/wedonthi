@@ -98,13 +98,14 @@
             let tempDiv = document.createElement('div');
             tempDiv.innerHTML = html;
             
-            let paragraphs = tempDiv.querySelectorAll('p, div');
+            let paragraphs = tempDiv.querySelectorAll('p, div, span');
             let dsTam = [];
             let cauHienTai = { noiDung: "", textFull: "", dapAnUser: {} };
 
             paragraphs.forEach(p => {
                 let text = p.innerText.trim();
-                if (text.startsWith("Câu ") || text.startsWith("CÂU ")) {
+                // Kiểm tra linh hoạt hơn với cả chữ thường hoặc viết hoa
+                if (text.toLowerCase().startsWith("câu")) {
                     if (cauHienTai.noiDung !== "") {
                         dsTam.push(phanLoaiVaDongGoi(cauHienTai));
                     }
@@ -118,7 +119,13 @@
                 dsTam.push(phanLoaiVaDongGoi(cauHienTai));
             }
 
-            danhSachCauHoi = dsTam.length > 0 ? dsTam : [{ noiDung: html, textFull: "", loai: "ngan", dapAnUser: {} }];
+            // Nếu file Word không tách được theo chữ "Câu", lấy toàn bộ nội dung gộp thành 1 câu để không bị đứng màn hình
+            if (dsTam.length === 0) {
+                danhSachCauHoi = [{ noiDung: html, textFull: html, loai: "ngan", dapAnUser: {} }];
+            } else {
+                danhSachCauHoi = dsTam;
+            }
+
             taoBangSoCau();
             hienThiCauHoi(0);
         }
