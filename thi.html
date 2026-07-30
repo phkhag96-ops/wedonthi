@@ -51,7 +51,7 @@
         <h3 id="tieu-de-de" style="margin: 0; display: inline-block;">Phòng Thi Chuẩn 3 Phần</h3>
         
         <!-- THÊM NÚT NỘP BÀI VÀO ĐÂY -->
-        <button id="btn-nop-bai" type="button" style="float: right; padding: 8px 16px; background: #e74c3e; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">Nộp bài & Chấm điểm</button>
+        <a href="#" id="btn-nop-bai" style="float: right; padding: 9px 18px; background: #e74c3e; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Nộp bài & Chấm điểm</a>
     <button onclick="location.href='danhsachde.html?mon=' + mon" style="float: right; padding: 8px 16px; background: #95a5a6; color: white; border: none; border-radius: 5px; cursor: pointer;">Quay lại</button>
     </header>
 
@@ -255,33 +255,19 @@
         }
         </script>
     <script>
-// Dùng hàm trực tiếp gắn thẳng vào nút để bỏ qua lỗi DOMContentLoaded nếu có
-function thietLapNutNop() {
-    let btnNop = document.getElementById("btn-nop-bai");
-    if (btnNop) {
-        // Gắn sự kiện click trực tiếp
-        btnNop.onclick = function(e) {
-            e.preventDefault();
-            
-            if (!confirm("Bạn có chắc chắn muốn nộp bài không?")) {
-                return false;
-            }
-
-            // Hiển thị bảng kết quả điểm số
-            document.body.innerHTML = `
-                <div style="font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f4f6f7; margin: 0;">
-                    <div style="text-align: center; padding: 40px; background: #fff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); max-width: 450px; width: 100%;">
-                        <h2 style="color: #27ae60; margin-bottom: 15px;">Kết Quả Bài Làm</h2>
-                        <p style="font-size: 18px; color: #333; margin-bottom: 10px;">Đã nộp bài thành công!</p>
-                        <p style="font-size: 32px; color: #e74c3e; font-weight: bold; margin: 20px 0;">Điểm số: 10.0 / 10 điểm</p>
-                        <button onclick="location.href='danhsachde.html'" style="padding: 12px 25px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%;">Quay lại danh sách đề</button>
-                    </div>
+    document.getElementById('btn-nop-bai').onclick = function(e) {
+    e.preventDefault();
+    
+    if (confirm("Bạn có chắc chắn muốn nộp bài không?")) {
+        document.body.innerHTML = `
+            <div style="font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f4f6f7; margin: 0;">
+                <div style="text-align: center; padding: 40px; background: #fff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); max-width: 450px; width: 100%;">
+                    <h2 style="color: #27ae60; margin-bottom: 15px;">Kết Quả Bài Làm</h2>
+                    <p style="font-size: 18px; color: #333; margin-bottom: 10px;">Đã nộp bài thành công!</p>
+                    <p style="font-size: 32px; color: #e74c3e; font-weight: bold; margin: 20px 0;">Điểm số: 10.0 / 10 điểm</p>
+                    <a href="danhsachde.html" style="display: inline-block; padding: 12px 25px; background: #3498db; color: white; text-decoration: none; border-radius: 6px; font-size: 16px; font-weight: bold; width: 100%; box-sizing: border-box;">Quay lại danh sách đề</a>
                 </div>
-            `;
-        };
+            </div>
+        `;
     }
-}
-
-// Chạy ngay lập tức và chạy lại khi trang tải xong để chắc chắn bắt được nút
-thietLapNutNop();
-window.onload = thietLapNutNop;
+};
