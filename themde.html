@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thêm Đề Thi - PVK</title>
     <link rel="stylesheet" href="style.css">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm Đề Thi - PVK</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Thư viện đọc file Word .docx trực tiếp -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+</head>
 </head>
 <body>
     <header style="background: #27ae60; padding: 15px; display: flex; justify-content: space-between; align-items: center; color: white;">
@@ -49,18 +57,46 @@
             const fileInput = document.getElementById('file-de-thi').files[0];
 
             if (fileInput) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const noiDungFile = event.target.result;
+                const fileName = fileInput.name.toLowerCase();
 
-                    let danhSachDe = JSON.parse(localStorage.getItem('kho_de_thi')) || { toan: [], ly: [], tin: [] };
-                    danhSachDe[mon].push({ id: Date.now(), ten: tenDe, htmlContent: noiDungFile });
-                    localStorage.setItem('kho_de_thi', JSON.stringify(danhSachDe));
+                // Nếu là file Word (.docx)
+                if (fileName.endsWith('.docx')) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const arrayBuffer = event.target.result;
+                        
+                        mammoth.convertToHtml({ arrayBuffer: arrayBuffer })
+                            .then(function(result) {
+                                const htmlContent = result.value;
 
-                    alert("Đã tải file đề thi lên và lưu thành công!");
-                    document.getElementById('form-them-de').reset();
-                };
-                reader.readAsText(fileInput);
+                                let danhSachDe = JSON.parse(localStorage.getItem('kho_de_thi')) || { toan: [], ly: [], tin: [] };
+                                danhSachDe[mon].push({ id: Date.now(), ten: tenDe, htmlContent: htmlContent });
+                                localStorage.setItem('kho_de_thi', JSON.stringify(danhSachDe));
+
+                                alert("Đã đọc file Word và lưu đề thi thành công!");
+                                document.getElementById('form-them-de').reset();
+                            })
+                            .catch(function(err) {
+                                alert("Lỗi khi đọc file Word: " + err.message);
+                            });
+                    };
+                    reader.readAsArrayBuffer(fileInput);
+                } 
+                // Nếu là file .txt hoặc .html thông thường
+                else {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const noiDungFile = event.target.result;
+
+                        let danhSachDe = JSON.parse(localStorage.getItem('kho_de_thi')) || { toan: [], ly: [], tin: [] };
+                        danhSachDe[mon].push({ id: Date.now(), ten: tenDe, htmlContent: noiDungFile });
+                        localStorage.setItem('kho_de_thi', JSON.stringify(danhSachDe));
+
+                        alert("Đã tải file lên và lưu thành công!");
+                        document.getElementById('form-them-de').reset();
+                    };
+                    reader.readAsText(fileInput);
+                }
             }
         }
     </script>

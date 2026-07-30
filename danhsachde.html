@@ -7,48 +7,83 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header style="background: #e74c3c; padding: 15px; display: flex; justify-content: space-between; align-items: center; color: white;">
-        <h3 id="tieu-de-mon" style="margin: 0;">Danh Sách Đề Thi</h3>
+    <header style="background: #27ae60; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0;" id="tieu-de-mon">Danh Sách Đề Thi</h3>
         <div>
-            <button onclick="location.href='themde.html'" style="background: #27ae60; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin-right: 10px; font-weight: bold;">+ Thêm Đề Mới</button>
-            <button onclick="location.href='home.html'" style="padding: 8px 15px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold;">Trang Chủ</button>
+            <button onclick="location.href='themde.html'" style="background: #e67e22; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; margin-right: 10px;">+ Thêm Đề Mới</button>
+            <button onclick="location.href='home.html'" style="background: #34495e; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">Trang Chủ</button>
         </div>
     </header>
 
-    <div style="display: flex; justify-content: center; padding: 30px;">
-        <div style="background: white; width: 100%; max-width: 600px; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-            <h2 style="text-align: center; margin-bottom: 25px; color: #2c3e50;">Chọn Đề Kiểm Tra</h2>
-            
-            <div id="danh-sach-hien-thi" style="display: flex; flex-direction: column; gap: 12px;">
-                <!-- CÁC ĐỀ CỐ ĐỊNH MẶC ĐỊNH LUÔN HIỆN SẴN -->
-                <a href="thi.html?de=1" style="background: #3498db; color: white; padding: 12px 15px; text-decoration: none; border-radius: 5px; font-weight: bold; display: block;">Đề Số 1: Kiểm Tra 15 Phút</a>
-                <a href="thi.html?de=2" style="background: #3498db; color: white; padding: 12px 15px; text-decoration: none; border-radius: 5px; font-weight: bold; display: block;">Đề Số 2: Kiểm Tra 1 Tiết (Giữa Kỳ)</a>
-                <a href="thi.html?de=3" style="background: #3498db; color: white; padding: 12px 15px; text-decoration: none; border-radius: 5px; font-weight: bold; display: block;">Đề Số 3: Thi Cuối Học Kỳ</a>
-            </div>
-        </div>
+    <div style="max-width: 800px; margin: 30px auto; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <h2 style="color: #2c3e50; border-bottom: 2px solid #eee; padding-bottom: 10px;">Các Đề Thi Hiện Có</h2>
+        <ul id="list-de-thi" style="list-style: none; padding: 0; margin-top: 20px;">
+            <!-- Danh sách đề thi sẽ tự động hiển thị ở đây -->
+        </ul>
     </div>
 
     <script>
+        // Lấy tên môn từ URL (ví dụ: ?mon=toan)
         const urlParams = new URLSearchParams(window.location.search);
-        let mon = urlParams.get('mon') || 'toan';
+        const mon = urlParams.get('mon') || 'toan';
 
-        const tieuDeMon = document.getElementById('tieu-de-mon');
-        if (mon === 'toan') tieuDeMon.innerText = 'Danh Sách Đề Thi - Môn Toán';
-        else if (mon === 'ly') tieuDeMon.innerText = 'Danh Sách Đề Thi - Môn Vật Lý';
-        else if (mon === 'tin') tieuDeMon.innerText = 'Danh Sách Đề Thi - Môn Tin Học';
+        // Đổi tiêu đề theo môn
+        const tenMonHienThi = { toan: 'Môn Toán', ly: 'Môn Vật Lí', tin: 'Môn Tin Học' };
+        document.getElementById('tieu-de-mon').innerText = "Danh Sách - " + (tenMonHienThi[mon] || 'Môn Học');
 
-        // Lấy thêm các đề do bạn tự thêm từ LocalStorage và gắn nối tiếp vào dưới
-        const danhSachDe = JSON.parse(localStorage.getItem('kho_de_thi')) || { toan: [], ly: [], tin: [] };
-        const deCuaMon = danhSachDe[mon] || [];
-        const container = document.getElementById('danh-sach-hien-thi');
+        // Hiển thị danh sách đề thi
+        function hienThiDanhSach() {
+            let danhSachDe = JSON.parse(localStorage.getItem('kho_de_thi')) || { toan: [], ly: [], tin: [] };
+            let deMonNay = danhSachDe[mon] || [];
+            let ul = document.getElementById('list-de-thi');
+            ul.innerHTML = '';
 
-        deCuaMon.forEach((de, index) => {
-            let btn = document.createElement('a');
-            btn.href = `thi.html?mon=${mon}&id=${de.id}`;
-            btn.style.cssText = "background: #2ecc71; color: white; padding: 12px 15px; text-decoration: none; border-radius: 5px; font-weight: bold; display: block;";
-            btn.innerText = `Đề Tự Thêm ${index + 1}: ${de.ten}`;
-            container.appendChild(btn);
-        });
+            if (deMonNay.length === 0) {
+                ul.innerHTML = '<li style="color: #7f8c8d; text-align: center; padding: 20px;">Chưa có đề thi nào trong môn này. Hãy bấm "+ Thêm Đề Mới" để tạo nhé!</li>';
+                return;
+            }
+
+            deMonNay.forEach((de, index) => {
+                let li = document.createElement('li');
+                li.style.cssText = "display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-bottom: 1px solid #eee; margin-bottom: 8px; background: #f9f9f9; border-radius: 5px;";
+                
+                // Link bấm vào để làm bài
+                let link = document.createElement('a');
+                link.href = `thi.html?mon=${mon}&id=${de.id}`;
+                link.innerText = (index + 1) + ". " + de.ten;
+                link.style.cssText = "color: #2980b9; text-decoration: none; font-weight: bold; font-size: 16px; flex-grow: 1;";
+                link.onmouseover = () => link.style.textDecoration = "underline";
+                link.onmouseout = () => link.style.textDecoration = "none";
+
+                // Nút Xóa
+                let btnXoa = document.createElement('button');
+                btnXoa.innerText = "Xóa";
+                btnXoa.style.cssText = "background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 14px;";
+                btnXoa.onclick = function() {
+                    xoaDeThi(mon, de.id);
+                };
+
+                li.appendChild(link);
+                li.appendChild(btnXoa);
+                ul.appendChild(li);
+            });
+        }
+
+        // Hàm xử lý xóa đề theo ID
+        function xoaDeThi(maMon, idDe) {
+            if (confirm("Bạn có chắc chắn muốn xóa đề thi này không?")) {
+                let danhSachDe = JSON.parse(localStorage.getItem('kho_de_thi')) || { toan: [], ly: [], tin: [] };
+                // Lọc bỏ đề có id cần xóa
+                danhSachDe[maMon] = danhSachDe[maMon].filter(de => de.id !== idDe);
+                // Lưu lại vào localStorage
+                localStorage.setItem('kho_de_thi', JSON.stringify(danhSachDe));
+                // Cập nhật lại giao diện danh sách
+                hienThiDanhSach();
+            }
+        }
+
+        // Chạy hàm hiển thị khi vừa mở trang
+        hienThiDanhSach();
     </script>
 </body>
 </html>
