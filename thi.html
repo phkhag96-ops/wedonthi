@@ -112,7 +112,13 @@
         // Thuật toán quét an toàn tuyệt đối, không lo bị treo
         function phanTichDeThi(html) {
             let tempDiv = document.createElement('div');
-            tempDiv.innerHTML = html;
+            
+            // Tự động bọc các mã LaTeX đơn vị như 500\text{g} thành $500\text{g}$ để MathJax nhận diện
+            let cleanHtml = html
+                .replace(/([0-9,.]+\\text\{[^}]+\})/g, '$$$1$$')
+                .replace(/([0-9,.]+\^[a-zA-Z]+\\text\{[^}]+\})/g, '$$$1$$');
+
+            tempDiv.innerHTML = cleanHtml;
             
             let elements = tempDiv.children;
             let dsTam = [];
