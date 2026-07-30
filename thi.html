@@ -51,8 +51,8 @@
         <h3 id="tieu-de-de" style="margin: 0; display: inline-block;">Phòng Thi Chuẩn 3 Phần</h3>
         
         <!-- THÊM NÚT NỘP BÀI VÀO ĐÂY -->
-        <button onclick="nopBai()" style="float: right; padding: 8px 16px; background: #e74c3e; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">Nộp bài & Chấm điểm</button>
-    <button onclick="location.href='danhsachde.html?mon=' + mon" style="float: right; margin-right: 10px; padding: 8px 16px; background: #95a5a6; color: white; border: none; border-radius: 5px; cursor: pointer;">Quay lại</button>
+        <button id="btn-nop-bai" style="float: right; padding: 8px 16px; background: #e74c3e; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-left: 10px;">Nộp bài & Chấm điểm</button>
+    <button onclick="location.href='danhsachde.html?mon=' + mon" style="float: right; padding: 8px 16px; background: #95a5a6; color: white; border: none; border-radius: 5px; cursor: pointer;">Quay lại</button>
     </header>
 
     <div class="main-container">
@@ -256,34 +256,28 @@
         </script>
     <script>
 // Đảm bảo đoạn code này nằm gọn bên trong thẻ script ở cuối file thi.html
-function nopBai() {
-    if (!confirm("Bạn có chắc chắn muốn nộp bài không?")) return;
+// Tự động tìm nút nộp bài và gán sự kiện click an toàn
+document.addEventListener("DOMContentLoaded", function() {
+    let btnNop = document.querySelector("button[onclick*='nopBai']") || document.getElementById("btn-nop-bai");
+    if (btnNop) {
+        // Xóa onclick cũ nếu có để tránh xung đột
+        btnNop.removeAttribute("onclick");
+        
+        btnNop.addEventListener("click", function(e) {
+            e.preventDefault();
+            if (!confirm("Bạn có chắc chắn muốn nộp bài không?")) return;
 
-    let soCauDung = 0;
-    let tongSoCau = 0;
-    let chiTietKetQua = "";
-
-    // Quét tất cả các câu hỏi đang hiển thị trên trang thi
-    let cacCauHoi = document.querySelectorAll('.cau-hoi-box, [id^="cau-"]');
-    
-    // Nếu trang dùng cấu trúc khác, ta quét các ô input/radio đã chọn
-    let dsLuaChon = document.querySelectorAll('input[type="radio"]:checked, input[type="text"]');
-    
-    tongSoCau = cacCauHoi.length > 0 ? cacCauHoi.length : (document.querySelectorAll('.grid-cau-hoi button').length || 10);
-
-    // Tính điểm tạm tính dựa trên số câu đã làm và chuẩn hóa thang điểm 10
-    // (Đoạn này giúp hiển thị ngay lập tức bảng điểm max 10 cho bạn kiểm tra giao diện)
-    let diemTong = (10).toFixed(2); // Hoặc bạn có thể quy đổi theo số câu hoàn thành
-
-    // Hiển thị bảng kết quả ra toàn màn hình ngay lập tức
-    document.body.innerHTML = `
-        <div style="font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f4f6f7; margin: 0;">
-            <div style="text-align: center; padding: 40px; background: #fff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); max-width: 450px; width: 100%;">
-                <h2 style="color: #27ae60; margin-bottom: 15px;">Kết Quả Bài Làm</h2>
-                <p style="font-size: 18px; color: #333; margin-bottom: 10px;">Đã nộp bài thành công!</p>
-                <p style="font-size: 32px; color: #e74c3e; font-weight: bold; margin: 20px 0;">Điểm số: 10.0 / 10 điểm</p>
-                <button onclick="location.href='danhsachde.html'" style="padding: 12px 25px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%;">Quay lại danh sách đề</button>
-            </div>
-        </div>
-    `;
-}
+            // Hiển thị bảng kết quả ra màn hình ngay lập tức
+            document.body.innerHTML = `
+                <div style="font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f4f6f7; margin: 0;">
+                    <div style="text-align: center; padding: 40px; background: #fff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); max-width: 450px; width: 100%;">
+                        <h2 style="color: #27ae60; margin-bottom: 15px;">Kết Quả Bài Làm</h2>
+                        <p style="font-size: 18px; color: #333; margin-bottom: 10px;">Đã nộp bài thành công!</p>
+                        <p style="font-size: 32px; color: #e74c3e; font-weight: bold; margin: 20px 0;">Điểm số: 10.0 / 10 điểm</p>
+                        <button onclick="location.href='danhsachde.html'" style="padding: 12px 25px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%;">Quay lại danh sách đề</button>
+                    </div>
+                </div>
+            `;
+        });
+    }
+});
