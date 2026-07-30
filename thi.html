@@ -113,10 +113,10 @@
         function phanTichDeThi(html) {
             let tempDiv = document.createElement('div');
             
-            // Tự động bọc các mã LaTeX đơn vị như 500\text{g} thành $500\text{g}$ để MathJax nhận diện
+            // Bộ lọc siêu bao quát: Tự động gom tất cả các cụm chứa mã LaTeX hoặc ký hiệu toán/lý trong file Word
             let cleanHtml = html
-                .replace(/([0-9,.]+\\text\{[^}]+\})/g, '$$$1$$')
-                .replace(/([0-9,.]+\^[a-zA-Z]+\\text\{[^}]+\})/g, '$$$1$$');
+                .replace(/([0-9,.\-+*/=<>a-zA-Z\s\(\)\^\\{}°]+(?:\\text|\\circ|\\frac|\\int|\\sqrt|\\sum|\\lim|_|\^)[^<]*)/g, '$$$1$$')
+                .replace(/\$\$+/g, '$$'); // Tránh bị lặp dấu đô la
 
             tempDiv.innerHTML = cleanHtml;
             
