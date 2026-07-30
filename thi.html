@@ -259,25 +259,24 @@ document.getElementById('btn-nop-bai').onclick = function(e) {
     e.preventDefault();
     
     if (confirm("Bạn có chắc chắn muốn nộp bài và chấm điểm không?")) {
-        const maDeDangThi = localStorage.getItem("currentMaDe"); 
-        const dapAnChuan = JSON.parse(localStorage.getItem("dapAn_" + maDeDangThi)) || []; 
-        
-        let soCauDung = 0;
-        let tongSoCau = dapAnChuan.length;
+            const dapAnChuan = deHientai ? deHientai.dapAnChuan : []; 
+            
+            let soCauDung = 0;
+            let tongSoCau = dapAnChuan.length;
 
-        if (tongSoCau === 0) {
-            alert("Không tìm thấy dữ liệu đáp án của đề này!");
-            return;
-        }
-
-        for (let i = 0; i < tongSoCau; i++) {
-            const luaChon = document.querySelector(`input[name="cau_${i}"]:checked`);
-            const dapanHocSinh = luaChon ? luaChon.value : "";
-
-            if (dapanHocSinh === dapAnChuan[i]) {
-                soCauDung++;
+            if (tongSoCau === 0) {
+                alert("Không tìm thấy dữ liệu đáp án của đề này!");
+                return;
             }
-        }
+
+            for (let i = 0; i < tongSoCau; i++) {
+                const luaChon = document.querySelector(`input[name="cau_${i}"]:checked`);
+                const dapanHocSinh = luaChon ? luaChon.value : "";
+
+                if (dapanHocSinh === dapAnChuan[i]) {
+                    soCauDung++;
+                }
+            }    
 
         let diem = (soCauDung / tongSoCau) * 10;
 
