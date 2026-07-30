@@ -191,6 +191,10 @@
             }
 
             document.getElementById('hien-thi-noi-dung-cau').innerHTML = cau.noiDung;
+            // Ép MathJax dịch lại toàn bộ ký hiệu công thức mới
+if (window.MathJax && window.MathJax.typesetPromise) {
+    MathJax.typesetPromise([document.getElementById('hien-thi-noi-dung-cau')]).catch((err) => console.log(err.message));
+}
             if (window.MathJax) {
     MathJax.typeset();
 }
