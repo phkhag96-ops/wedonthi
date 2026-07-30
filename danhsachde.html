@@ -10,8 +10,8 @@
     <header style="background: #e74c3c; padding: 15px; display: flex; justify-content: space-between; align-items: center; color: white;">
         <h3 id="tieu-de-mon" style="margin: 0;">Danh Sách Đề Thi</h3>
         <div>
-            <button onclick="location.href='themde.html'" style="background: #27ae60; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin-right: 10px;">+ Thêm Đề Mới</button>
-            <button onclick="location.href='home.html'" style="padding: 8px 15px; cursor: pointer;">Trang Chủ</button>
+            <button onclick="location.href='themde.html'" style="background: #27ae60; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin-right: 10px; font-weight: bold;">+ Thêm Đề Mới</button>
+            <button onclick="location.href='home.html'" style="padding: 8px 15px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold;">Trang Chủ</button>
         </div>
     </header>
 
@@ -19,40 +19,36 @@
         <div style="background: white; width: 100%; max-width: 600px; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
             <h2 style="text-align: center; margin-bottom: 25px; color: #2c3e50;">Chọn Đề Kiểm Tra</h2>
             
-            <!-- Khu vực hiển thị danh sách đề tự động -->
             <div id="danh-sach-hien-thi" style="display: flex; flex-direction: column; gap: 12px;">
-                <!-- Các đề được thêm sẽ hiển thị ở đây -->
+                <!-- CÁC ĐỀ CỐ ĐỊNH MẶC ĐỊNH LUÔN HIỆN SẴN -->
+                <a href="thi.html?de=1" style="background: #3498db; color: white; padding: 12px 15px; text-decoration: none; border-radius: 5px; font-weight: bold; display: block;">Đề Số 1: Kiểm Tra 15 Phút</a>
+                <a href="thi.html?de=2" style="background: #3498db; color: white; padding: 12px 15px; text-decoration: none; border-radius: 5px; font-weight: bold; display: block;">Đề Số 2: Kiểm Tra 1 Tiết (Giữa Kỳ)</a>
+                <a href="thi.html?de=3" style="background: #3498db; color: white; padding: 12px 15px; text-decoration: none; border-radius: 5px; font-weight: bold; display: block;">Đề Số 3: Thi Cuối Học Kỳ</a>
             </div>
         </div>
     </div>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const mon = urlParams.get('mon') || 'toan';
-        
+        let mon = urlParams.get('mon') || 'toan';
+
         const tieuDeMon = document.getElementById('tieu-de-mon');
         if (mon === 'toan') tieuDeMon.innerText = 'Danh Sách Đề Thi - Môn Toán';
         else if (mon === 'ly') tieuDeMon.innerText = 'Danh Sách Đề Thi - Môn Vật Lý';
         else if (mon === 'tin') tieuDeMon.innerText = 'Danh Sách Đề Thi - Môn Tin Học';
 
-        // Lấy danh sách đề từ LocalStorage
+        // Lấy thêm các đề do bạn tự thêm từ LocalStorage và gắn nối tiếp vào dưới
         const danhSachDe = JSON.parse(localStorage.getItem('kho_de_thi')) || { toan: [], ly: [], tin: [] };
         const deCuaMon = danhSachDe[mon] || [];
-        
         const container = document.getElementById('danh-sach-hien-thi');
 
-        if (deCuaMon.length === 0) {
-            container.innerHTML = `<p style="text-align: center; color: #7f8c8d;">Chưa có đề nào trong môn này. Hãy bấm nút <b>"+ Thêm Đề Mới"</b> ở góc trên để tạo đề nhé!</p>`;
-        } else {
-            deCuaMon.forEach((de, index) => {
-                let btn = document.createElement('a');
-                btn.href = `thi.html?mon=${mon}&id=${de.id}`;
-                btn.className = 'nut-xac-nhan';
-                btn.style.cssText = "background: #3498db; color: white; padding: 12px; text-align: center; text-decoration: none; border-radius: 5px; font-weight: bold; display: block;";
-                btn.innerText = `Đề số ${index + 1}: ${de.ten}`;
-                container.appendChild(btn);
-            });
-        }
+        deCuaMon.forEach((de, index) => {
+            let btn = document.createElement('a');
+            btn.href = `thi.html?mon=${mon}&id=${de.id}`;
+            btn.style.cssText = "background: #2ecc71; color: white; padding: 12px 15px; text-decoration: none; border-radius: 5px; font-weight: bold; display: block;";
+            btn.innerText = `Đề Tự Thêm ${index + 1}: ${de.ten}`;
+            container.appendChild(btn);
+        });
     </script>
 </body>
 </html>
