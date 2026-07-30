@@ -63,9 +63,24 @@
                             .then(function(result) {
                                 const htmlContent = result.value;
 
-                                let danhSachDe = JSON.parse(localStorage.getItem('kho_de_thi')) || { toan: [], ly: [], tin: [] };
-                                danhSachDe[mon].push({ id: Date.now(), ten: tenDe, htmlContent: htmlContent });
-                                localStorage.setItem('kho_de_thi', JSON.stringify(danhSachDe));
+                               let danhSachDe = JSON.parse(localStorage.getItem('kho_de_thi')) || { toan: [], ly: [], tin: [] };
+                    
+                    let deMoi = {
+                        id: Date.now(),
+                        ten: tenDe,
+                        htmlContent: htmlContent,
+                        dapAnChuan: { 
+                            1: "A", 
+                            2: "B", 
+                            3: { a: "đúng", b: "sai", c: "đúng", d: "sai" }, 
+                            4: "150" 
+                        }
+                    };
+
+                    danhSachDe[mon].push(deMoi);
+                    localStorage.setItem('kho_de_thi', JSON.stringify(danhSachDe));
+                    alert("Thêm đề thành công!");
+                    location.href = 'danhsachde.html?mon=' + mon;
 
                                 alert("Đã đọc file Word và lưu đề thi thành công!");
                                 document.getElementById('form-them-de').reset();
