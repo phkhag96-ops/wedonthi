@@ -69,10 +69,10 @@
             </div>
 
             <div class="nav-buttons">
-                <button class="btn-nav btn-prev" onclick="cauTruoc()">⬅ Câu Trước</button>
-                <button class="btn-nav btn-next" onclick="cauSau()">Câu Sau ➡</button>
-                <button type="button" id="btn-nop-bai" style="padding: 8px 16px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px;">Nộp bài & Chấm điểm</button>
-            </div>
+    <button class="btn-nav btn-prev" onclick="cauTruoc()">Câu Trước</button>
+    <button class="btn-nav btn-next" onclick="cauSau()">Câu Sau</button>
+    <button type="button" id="btn-nop-bai" onclick="nopBaiVaChamDiem()" style="padding: 8px 16px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px;">Nộp bài & Chấm điểm</button>
+</div>
         </div>
     </div>
 
@@ -254,36 +254,37 @@
         }
         </script>
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const btnNop = document.getElementById('btn-nop-bai');
-    
-    if (btnNop) {
-        btnNop.onclick = function(e) {
-            e.preventDefault();
-            console.log("Đã bấm nút nộp bài!"); // Dòng này giúp kiểm tra nút có nhận sự kiện không
+function nopBaiVaChamDiem() {
+    if (confirm("Bạn có chắc chắn muốn nộp bài và chấm điểm không?")) {
+        const dapAnChuan = deHientai ? deHientai.dapAnChuan : []; 
+        
+        let soCauDung = 0;
+        let tongSoCau = dapAnChuan.length;
 
-            const dapAnChuan = deHientai ? deHientai.dapAnChuan : []; 
-            console.log("Đáp án chuẩn:", dapAnChuan);
+        if (tongSoCau === 0) {
+            alert("Không tìm thấy dữ liệu đáp án của đề này!");
+            return;
+        }
 
-            let soCauDung = 0;
-            let tongSoCau = dapAnChuan.length;
+        for (let i = 0; i < tongSoCau; i++) {
+            const luaChon = document.querySelector(`input[name="cau_${i}"]:checked`);
+            const dapanHocSinh = luaChon ? luaChon.value : "";
 
-            if (tongSoCau === 0) {
-                alert("Không tìm thấy dữ liệu đáp án của đề này!");
-                return;
+            if (dapanHocSinh === dapAnChuan[i]) {
+                soCauDung++;
             }
+        }
 
-            for (let i = 0; i < tongSoCau; i++) {
-                const luaChon = document.querySelector(`input[name="cau_${i}"]:checked`);
-                const dapanHocSinh = luaChon ? luaChon.value : "";
+        let diem = (soCauDung / tongSoCau) * 10;
 
-                if (dapanHocSinh === dapAnChuan[i]) {
-                    soCauDung++;
-                }
-            }
-
-            let diem = (soCauDung / tongSoCau) * 10;
-            alert("Chấm điểm thành công! Số câu đúng: " + soCauDung + "/" + tongSoCau + " - Điểm: " + diem.toFixed(2));
-        };
+        document.body.innerHTML = `
+            <div style="text-align: center; padding: 50px; font-family: Arial;">
+                <h2>Kết quả bài làm</h2>
+                <p>Số câu đúng: ${soCauDung} / ${tongSoCau}</p>
+                <p>Điểm của bạn: <b style="color: red; font-size: 24px;">${diem.toFixed(2)} điểm</b></p>
+                <br>
+                <a href="danhsachde.html" style="padding: 10px 20px; background: #27ae60; color: white; text-decoration: none; border-radius: 5px;">Quay lại danh sách đề</a>
+            </div>
+        `;
     }
-});
+}
