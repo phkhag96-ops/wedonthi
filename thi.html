@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phòng Thi Chuẩn 3 Phần - PVK</title>
     <link rel="stylesheet" href="style.css">
+
+    <!-- Thư viện hiển thị công thức toán học MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/mml-chtml.js"></script>
+
     <style>
         body { font-family: Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 0; display: flex; flex-direction: column; height: 100vh; }
         header { background: #27ae60; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
@@ -176,6 +181,9 @@
             }
 
             document.getElementById('hien-thi-noi-dung-cau').innerHTML = cau.noiDung;
+            if (window.MathJax) {
+    MathJax.typeset();
+}
             let khung = document.getElementById('khung-tra-loi');
             khung.innerHTML = "";
 
