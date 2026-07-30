@@ -3,52 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phòng Thi Trắc Nghiệm - PVK</title>
+    <title>Phòng Thi Chuẩn 3 Phần - PVK</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 0; display: flex; flex-direction: column; height: 100vh; }
+        header { background: #27ae60; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .main-container { display: flex; flex: 1; overflow: hidden; }
+        
+        /* Cột bên trái: Danh sách câu hỏi */
+        .sidebar-cau-hoi { width: 280px; background: white; border-right: 1px solid #ddd; padding: 20px; overflow-y: auto; }
+        .grid-cau-hoi { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 15px; }
+        .btn-so-cau { width: 40px; height: 40px; border: 1px solid #ccc; background: #fff; border-radius: 4px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+        .btn-so-cau.da-lam { background: #2ecc71; color: white; border-color: #27ae60; }
+        .btn-so-cau.dang-chon { border: 2px solid #2c3e50; transform: scale(1.05); }
+
+        /* Cột bên phải: Nội dung câu hỏi */
+        .content-thi { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; justify-content: space-between; }
+        .cau-hoi-box { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .badge-dang { display: inline-block; background: #3498db; color: white; padding: 4px 12px; border-radius: 4px; font-size: 13px; font-weight: bold; margin-bottom: 15px; }
+        .noi-dung-cau { font-size: 18px; color: #2c3e50; line-height: 1.6; margin-bottom: 20px; }
+        
+        /* Khung trả lời */
+        .options-list { list-style: none; padding: 0; }
+        .options-list li { margin-bottom: 12px; }
+        .options-list label { display: flex; align-items: center; font-size: 16px; cursor: pointer; padding: 10px 15px; border: 1px solid #e0e0e0; border-radius: 5px; }
+        .options-list label:hover { background: #f9f9f9; }
+        .options-list input { margin-right: 12px; transform: scale(1.2); }
+        
+        /* Bảng Đúng / Sai */
+        .table-dung-sai { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .table-dung-sai th, .table-dung-sai td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+        .table-dung-sai th { background: #f2f2f2; color: #333; }
+        .table-dung-sai td:first-child { text-align: left; font-weight: bold; }
+
+        .input-tra-loi-ngan { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; margin-top: 10px; box-sizing: border-box; }
+
+        /* Nút điều hướng */
+        .nav-buttons { display: flex; justify-content: space-between; margin-top: 30px; }
+        .btn-nav { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 14px; }
+        .btn-prev { background: #95a5a6; color: white; }
+        .btn-next { background: #3498db; color: white; }
+    </style>
 </head>
 <body>
-    <header style="background: #e74c3c; padding: 15px; display: flex; justify-content: space-between; align-items: center; color: white;">
-        <h3 id="tieu-de-phong-thi" style="margin: 0;">Phòng Thi Trắc Nghiệm</h3>
-        <div>
-            <button id="nut-quay-lai" style="padding: 8px 15px; cursor: pointer;">Quay Lại Danh Sách</button>
-            <button onclick="location.href='home.html'" style="padding: 8px 15px; cursor: pointer;">Trang Chủ</button>
-        </div>
+
+    <header>
+        <h3 id="tieu-de-de" style="margin: 0;">Phòng Thi Chuẩn 3 Phần</h3>
+        <button onclick="location.href='danhsachde.html?mon=' + mon" style="background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold;">Thoát</button>
     </header>
 
-    <div style="display: flex; justify-content: center; padding: 20px;">
-        <div style="background: white; width: 100%; max-width: 800px; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-            
-            <h2 id="ten-de-thi" style="color: #2c3e50; text-align: center; margin-bottom: 25px;">Đang tải nội dung đề...</h2>
-            
-            <div id="khung-chua-cau-hoi">
-                <!-- Nội dung câu hỏi từ lúc bạn thêm đề sẽ hiện ở đây -->
+    <div class="main-container">
+        <!-- Cột trái: Bảng số câu -->
+        <div class="sidebar-cau-hoi">
+            <h4>Danh sách câu hỏi</h4>
+            <div class="grid-cau-hoi" id="bang-so-cau"></div>
+        </div>
+
+        <!-- Cột phải: Chi tiết câu hỏi -->
+        <div class="content-thi">
+            <div class="cau-hoi-box">
+                <div class="badge-dang" id="nhan-dang">Đang xác định dạng câu...</div>
+                <div class="noi-dung-cau" id="hien-thi-noi-dung-cau">Đang tải...</div>
+                <div id="khung-tra-loi"></div>
             </div>
 
+            <div class="nav-buttons">
+                <button class="btn-nav btn-prev" onclick="cauTruoc()">⬅ Câu Trước</button>
+                <button class="btn-nav btn-next" onclick="cauSau()">Câu Sau ➡</button>
+            </div>
         </div>
     </div>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const mon = urlParams.get('mon') || 'toan';
-        const idDe = urlParams.get('id');
+        const idDe = Number(urlParams.get('id'));
 
-        // Nút quay lại đúng danh sách môn
-        document.getElementById('nut-quay-lai').onclick = function() {
-            location.href = `danhsachde.html?mon=${mon}`;
-        };
+        let danhSachDe = JSON.parse(localStorage.getItem('kho_de_thi')) || { toan: [], ly: [], tin: [] };
+        let deHienTai = danhSachDe[mon].find(d => d.id === idDe);
 
-        // Tìm đề trong bộ nhớ
-        const danhSachDe = JSON.parse(localStorage.getItem('kho_de_thi')) || { toan: [], ly: [], tin: [] };
-        const deCuaMon = danhSachDe[mon] || [];
-        const deHienTai = deCuaMon.find(d => d.id == idDe);
+        let danhSachCauHoi = [];
+        let cauHoiDangXem = 0;
 
         if (deHienTai) {
-            document.getElementById('tieu-de-phong-thi').innerText = "Phòng Thi - " + deHienTai.ten;
-            document.getElementById('ten-de-thi').innerText = deHienTai.ten;
-            document.getElementById('khung-chua-cau-hoi').innerHTML = deHienTai.htmlContent;
+            document.getElementById('tieu-de-de').innerText = "Đề: " + deHienTai.ten;
+            phanTichDeThi(deHienTai.htmlContent);
         } else {
-            document.getElementById('khung-chua-cau-hoi').innerHTML = `<p style="text-align: center; color: red; font-size: 18px;">Không tìm thấy nội dung đề thi này! Vui lòng chọn lại đề ở sảnh.</p>`;
+            alert("Không tìm thấy đề thi!");
+            location.href = 'danhsachde.html?mon=' + mon;
         }
-    </script>
-</body>
-</html>
+
+        // Bộ phân tích thông minh nhận diện 3 dạng: Trắc nghiệm, Đúng/Sai, Trả lời ngắn
+        function phanTichDeThi(html) {
+            let tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            
+            let paragraphs = tempDiv.querySelectorAll('p, div');
+            let dsTam = [];
+            let cauHienTai = { noiDung: "", textFull: "", dapAnUser: {} };
+
+            paragraphs.forEach(p => {
+                let text = p.innerText.trim();
+                if (text.startsWith("Câu ") || text.startsWith("CÂU ")) {
+                    if (cauHienTai.noiDung !== "") {
+                        dsTam.push(phanLoaiVaDongGoi(cauHienTai));
+                    }
+                    cauHienTai = { noiDung: p.innerHTML, textFull: text, dapAnUser: {} };
+                } else {
+                    cauHienTai.noiDung += "<br>" + p.innerHTML;
+                    cauHienTai.textFull += " " + text;
+                }
+            });
+            if (cauHienTai.noiDung !== "") {
+                dsTam.push(phanLoaiVaDongGoi(cauHienTai));
+            }
+
+            danhSachCauHoi = dsTam.length > 0 ? dsTam : [{ noiDung: html, textFull: "", loai: "ngan", dapAnUser: {} }];
+            taoBangSoCau();
+            hienThiCauHoi(0);
+        }
+
+        function phanLoaiVaDongGoi(cau) {
+            let t = cau.textFull.toLowerCase();
+            // Nhận diện dạng Đúng / Sai (thường chứa các ý a, b, c, d hoặc từ đúng/sai)
+            if (t.includes("a)") && t.includes("b)") && (t.includes("đúng") || t.includes("sai") || t.includes("c)") || t.includes("d)"))) {
+                cau.loai = "dung_sai";
+            } 
+            // Nhận diện dạng Trắc nghiệm nhiều lựa chọn ABCD
+            else if (t.includes("a.") || t.includes("b.") || t.includes("c.") || t.includes("d.") || (t.includes("a)") && t.includes("b)"))) {
+                cau.loai = "trac_nghiem";
+            } 
+            // Còn lại mặc định là Trả lời ngắn
+            else {
+                cau.loai = "tra_loi_ngan";
+            }
+            return cau;
+        }
+
+        function taoBangSoCau() {
+            let grid = document.getElementById('bang-so-cau');
+            grid.innerHTML = '';
+            danhSachCauHoi.forEach((_, index) => {
+                let btn = document.createElement('button');
+                btn.className = 'btn-so-cau';
+                btn.innerText = index + 1;
+                btn.id = `btn-cau-${index}`;
+                btn.onclick = () => hienThiCauHoi(index);
+                grid.appendChild(btn);
+            });
+        }
+
+        function hienThiCauHoi(index) {}
+            cauHoiDangXem = index;
+            let cau = danhSachCauHoi[index];
+
+            document.querySelectorAll('.btn-so-cau').forEach((b, idx) => {
+                b.classList.toggle('dang-chon', idx === index);
+            });
+
+            // Gắn nhãn hiển thị loại câu hỏi
+            let nhan = document.getElementById('nhan-dang');
+            if (cau.loai === "trac_nghiem") {
+                nhan.innerText = `Câu ${index + 1} - Phần I: Trắc nghiệm nhiều lựa chọn`;
+                nhan.style.background = "#3498db";
+            } else if (cau.loai === "dung_sai") {
+                nhan.innerText = `Câu ${index + 1} - Phần II: Trắc nghiệm Đúng / Sai`;
+                nhan.style.background = "#e67e22";
+            } else {
+                nhan.innerText = `Câu ${index + 1} - Phần III: Trả lời ngắn`;
+                nhan.style.background = "#9b59b6";
+            }
