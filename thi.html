@@ -6,15 +6,16 @@
     <title>Phòng Thi Chuẩn 3 Phần - PVK</title>
     <link rel="stylesheet" href="style.css">
 
-    <!-- Cấu hình và thư viện MathJax tự động đọc mã LaTeX -->
+    <!-- Cấu hình MathJax nhận diện mọi định dạng LaTeX -->
     <script>
         window.MathJax = {
             tex: {
                 inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
             },
-            svg: {
-                fontCache: 'global'
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
             }
         };
     </script>
